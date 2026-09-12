@@ -256,8 +256,8 @@
   //    and paste them below, replacing the placeholders.
   // 4. That's it — every visitor who opens this page will read/write the same
   //    shared row and see each other's edits live, with no server to run.
-  const SUPABASE_URL = "https://glicvadupedqidryhvlh.supabase.co";
-  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdsaWN2YWR1cGVkcWlkcnlodmxoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkxMTUwMzUsImV4cCI6MjEwNDY5MTAzNX0.UOXuvm103hFUTkJLcjooL-ulh3W7eT2SENbkOyFhhGk";
+  const SUPABASE_URL = "YOUR_SUPABASE_URL";
+  const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
   const SUPABASE_ENABLED = SUPABASE_URL !== "YOUR_SUPABASE_URL" && SUPABASE_ANON_KEY !== "YOUR_SUPABASE_ANON_KEY";
   const SB_TABLE = "family_tree";
   const SB_ROW_ID = "main";
@@ -423,7 +423,7 @@
   // ---------------------------------------------------------------------
   function addPerson(fields){
     const id = newPersonId();
-    DATA.people[id] = Object.assign({id, name:"New Person", gender:null, birth:"", death:"", notes:""}, fields||{});
+    DATA.people[id] = Object.assign({id, name:"New Person", gender:null, birth:"", death:"", city:"", phone:"", notes:""}, fields||{});
     return id;
   }
   function updatePerson(id, fields){
@@ -961,6 +961,8 @@
       </div>
       <div class="field"><label for="f_birth">Birth year / date</label><input id="f_birth" value="${escapeHtml(p.birth)}" placeholder="e.g. 1942"></div>
       <div class="field"><label for="f_death">Death year / date</label><input id="f_death" value="${escapeHtml(p.death)}" placeholder="leave blank if living"></div>
+      <div class="field"><label for="f_city">City / location</label><input id="f_city" value="${escapeHtml(p.city||'')}" placeholder="e.g. Pune, India"></div>
+      <div class="field"><label for="f_phone">Phone number</label><input id="f_phone" type="tel" value="${escapeHtml(p.phone||'')}" placeholder="e.g. +91 98765 43210"></div>
       <div class="field"><label for="f_notes">Notes</label><textarea id="f_notes" placeholder="Any additional info…">${escapeHtml(p.notes)}</textarea></div>
       <button class="btn primary" id="btnSavePerson" style="width:100%;">Save changes</button>
     `;
@@ -1052,6 +1054,8 @@
         gender: document.getElementById('f_gender').value || null,
         birth: document.getElementById('f_birth').value.trim(),
         death: document.getElementById('f_death').value.trim(),
+        city: document.getElementById('f_city').value.trim(),
+        phone: document.getElementById('f_phone').value.trim(),
         notes: document.getElementById('f_notes').value.trim(),
       });
       fullRebuildAndRender(); openPanelFor(pid);
