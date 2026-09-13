@@ -438,8 +438,11 @@
       const i = u.children.indexOf(id);
       if(i>=0) u.children.splice(i,1);
     });
+    // A union with no parents left is meaningless (a "marriage" with nobody in it) —
+    // remove it regardless of whether it still lists children, otherwise those
+    // children become orphaned/dangling and render disconnected from the tree.
     Object.keys(DATA.unions).forEach(uid => {
-      if(DATA.unions[uid].parents.length===0 && DATA.unions[uid].children.length===0){
+      if(DATA.unions[uid].parents.length===0){
         delete DATA.unions[uid];
       }
     });
@@ -779,6 +782,21 @@
     if(fitAfter) fitToScreen();
   }
 
+  // Finds and removes "ghost" unions (marriages with zero parents left, from the
+  // older bug where deleting someone's last parent didn't clean up properly) so
+  // their children stop floating disconnected from the rest of the tree. Runs
+  // automatically once on load and saves the fix back to the shared data.
+  function repairOrphanedUnions(){
+    let fixed = 0;
+    Object.keys(DATA.unions).forEach(uid => {
+      if(DATA.unions[uid].parents.length === 0){
+        delete DATA.unions[uid];
+        fixed++;
+      }
+    });
+    return fixed;
+  }
+
   // ---------------------------------------------------------------------
   // Pan & zoom
   // ---------------------------------------------------------------------
@@ -1069,7 +1087,9 @@
         const u = unionWhereChild(pid);
         if(u){
           u.parents = u.parents.filter(x=>x!==parentId);
-          if(u.parents.length===0 && u.children.length===0) delete DATA.unions[u.id];
+          // Same fix as deletePerson(): a union with no parents left is meaningless,
+          // remove it even if it still has children so they don't dangle.
+          if(u.parents.length===0) delete DATA.unions[u.id];
         }
         fullRebuildAndRender(); openPanelFor(pid);
       };
@@ -1219,6 +1239,11 @@
   // Init
   // ---------------------------------------------------------------------
   initData().then(() => {
+    const fixed = repairOrphanedUnions();
+    if(fixed > 0){
+      console.warn(`Repaired ${fixed} orphaned family record(s) left over from a past bug.`);
+      saveData(); // push the cleaned-up data back to Supabase so everyone gets the fix
+    }
     render();
     // Open every page in the same viewport state as clicking Reset.
     document.getElementById('btnReset').click();
