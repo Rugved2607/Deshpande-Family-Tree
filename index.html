@@ -2,90 +2,46 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<!-- Accessibility Fix: Removed maximum-scale and user-scalable=no to allow browser zooming -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Deshpande Family Tree</title>
 <style>
   :root {
-    /* Modern, High-Contrast Color Palette */
-    --bg: #f2efe6;
-    --panel: #fffdf7;
-    --panel2: #ebe5d8;
-    --line: #b8ad9a;
-    --text: #2f2a24;
-    --muted: #6f6659;
-    --accent: #6b4f2a;
-    --accent-hover: #523b20;
-    --male-bg: #e4edf0;
-    --male-border: #426a78;
-    --female-bg: #eee2e6;
-    --female-border: #8a5264;
-    --unknown-bg: #eee8dc;
-    --unknown-border: #8b806f;
-    --danger: #b34a3d;
-    --danger-hover: #96382f;
-    --focus-ring: #8b6f3e;
-    --radius: 8px;
-    
-    /* Edge Colors */
-    --edge-marriage: #b8741a;
-    --edge-parent: #887d6d;
+    --bg: #f2efe6; --panel: #fffdf7; --panel2: #ebe5d8; --line: #b8ad9a;
+    --text: #2f2a24; --muted: #6f6659; --accent: #6b4f2a; --accent-hover: #523b20;
+    --male-bg: #e4edf0; --male-border: #426a78;
+    --female-bg: #eee2e6; --female-border: #8a5264;
+    --unknown-bg: #eee8dc; --unknown-border: #8b806f;
+    --danger: #b34a3d; --danger-hover: #96382f; --focus-ring: #8b6f3e; --radius: 8px;
+    --edge-marriage: #b8741a; --edge-parent: #887d6d;
   }
-  
   * { box-sizing: border-box; }
-  
-  /* Focus Styles for Accessibility */
-  *:focus-visible {
-    outline: 3px solid var(--focus-ring);
-    outline-offset: 2px;
-    border-radius: 4px;
-  }
-
-  html, body {
-    margin: 0; padding: 0; height: 100%; 
-    background: var(--bg); color: var(--text); 
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-    overflow: hidden;
-  }
+  *:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 2px; border-radius: 4px; }
+  html, body { margin: 0; padding: 0; height: 100%; background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; overflow: hidden; }
   #app { position: relative; width: 100vw; height: 100vh; }
-
-  /* ---------- Toolbar ---------- */
-  #toolbar {
-    position: absolute; top: 0; left: 0; right: 0; z-index: 20;
+  #toolbar { position: absolute; top: 0; left: 0; right: 0; z-index: 20;
     display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
-    padding: 10px 14px; background: rgba(255, 253, 247, 0.94);
+    padding: 10px 14px; background: rgba(255,253,247,0.94);
     border-bottom: 1px solid var(--line); backdrop-filter: blur(8px);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-  }
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
   #toolbar .title { font-weight: 700; font-size: 15px; color: var(--text); margin-right: 8px; white-space: nowrap; }
   #toolbar .grow { flex: 1 1 160px; min-width: 120px; }
   #searchWrap { position: relative; }
-  #searchInput {
-    width: 100%; padding: 8px 12px; border-radius: var(--radius); border: 1px solid var(--line);
+  #searchInput { width: 100%; padding: 8px 12px; border-radius: var(--radius); border: 1px solid var(--line);
     background: var(--panel2); color: var(--text); font-size: 14px; outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-  }
-  #searchInput:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(107, 79, 42, 0.18); }
-  
-  #searchResults {
-    position: absolute; top: 40px; left: 0; right: 0; background: var(--panel);
+    transition: border-color 0.2s, box-shadow 0.2s; }
+  #searchInput:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(107,79,42,0.18); }
+  #searchResults { position: absolute; top: 40px; left: 0; right: 0; background: var(--panel);
     border: 1px solid var(--line); border-radius: var(--radius); max-height: 260px; overflow: auto; z-index: 30;
-    display: none; box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-  }
-  #searchResults button.search-item {
-    width: 100%; text-align: left; background: none; border: none; padding: 8px 12px; 
-    font-size: 13px; cursor: pointer; border-bottom: 1px solid var(--line); color: var(--text);
-  }
+    display: none; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+  #searchResults button.search-item { width: 100%; text-align: left; background: none; border: none;
+    padding: 8px 12px; font-size: 13px; cursor: pointer; border-bottom: 1px solid var(--line); color: var(--text); }
   #searchResults button.search-item:last-child { border-bottom: none; }
-  #searchResults button.search-item:hover, 
+  #searchResults button.search-item:hover,
   #searchResults button.search-item:focus { background: var(--accent); color: #fff; outline: none; }
-  
-  .btn {
-    background: var(--panel); color: var(--text); border: 1px solid var(--line);
+  .btn { background: var(--panel); color: var(--text); border: 1px solid var(--line);
     padding: 8px 12px; border-radius: var(--radius); font-size: 13px; font-weight: 500;
-    cursor: pointer; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px;
-    transition: all 0.2s;
-  }
+    cursor: pointer; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s; }
   .btn:hover { border-color: var(--muted); background: var(--panel2); }
   .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
   .btn.primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
@@ -93,92 +49,63 @@
   .btn.danger:hover { background: var(--danger); color: #fff; }
   .btn.small { padding: 6px 10px; font-size: 12px; }
   #toolbarRow2 { display: flex; gap: 8px; width: 100%; flex-wrap: wrap; margin-top: 4px; }
-
-  /* ---------- Canvas ---------- */
   #canvasWrap { position: absolute; inset: 0; overflow: hidden; touch-action: none; cursor: grab; }
   #canvasWrap.grabbing { cursor: grabbing; }
   svg#tree { position: absolute; top: 0; left: 0; }
-  
   .card-rect { fill: var(--unknown-bg); stroke: var(--unknown-border); stroke-width: 2; rx: 8; ry: 8; transition: stroke 0.2s, stroke-width 0.2s; }
   .card-rect.male { fill: var(--male-bg); stroke: var(--male-border); }
   .card-rect.female { fill: var(--female-bg); stroke: var(--female-border); }
-  
   .node-group { cursor: pointer; outline: none; }
   .node-group:hover .card-rect { filter: brightness(0.95); }
   .node-group:focus-visible .card-rect { stroke: var(--focus-ring); stroke-width: 4; }
   .card-rect.selected { stroke: var(--accent); stroke-width: 4; filter: brightness(0.95); }
-  
   .card-name { fill: var(--text); font-size: 13px; font-weight: 700; pointer-events: none; }
   .card-sub { fill: var(--muted); font-size: 10px; pointer-events: none; }
-  
   .edge-marriage { stroke: var(--edge-marriage); stroke-width: 2.5; fill: none; }
   .edge-parent { stroke: var(--edge-parent); stroke-width: 2; fill: none; }
-
-  /* ---------- Side panel ---------- */
-  #panel {
-    position: absolute; top: 0; right: -400px; width: 380px; height: 100%;
+  #panel { position: absolute; top: 0; right: -400px; width: 380px; height: 100%;
     background: var(--panel); border-left: 1px solid var(--line); z-index: 25;
-    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1); overflow-y: auto; padding: 20px;
-    box-shadow: -4px 0 15px rgba(0,0,0,0.05);
-  }
+    transition: right 0.3s cubic-bezier(0.4,0,0.2,1); overflow-y: auto; padding: 20px;
+    box-shadow: -4px 0 15px rgba(0,0,0,0.05); }
   #panel.open { right: 0; }
   #panel h2 { font-size: 18px; margin: 0 0 4px 0; color: var(--text); }
-  
-  #panel .close-btn {
-    position: absolute; top: 16px; right: 16px; cursor: pointer; color: var(--muted); 
-    font-size: 20px; background: none; border: none; padding: 4px 8px; border-radius: 4px;
-  }
+  #panel .close-btn { position: absolute; top: 16px; right: 16px; cursor: pointer; color: var(--muted);
+    font-size: 20px; background: none; border: none; padding: 4px 8px; border-radius: 4px; }
   #panel .close-btn:hover { color: var(--danger); background: var(--panel2); }
-  
   .field { margin-bottom: 12px; }
   .field label { display: block; font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 6px; }
-  .field input, .field select, .field textarea {
-    width: 100%; padding: 8px 10px; border-radius: var(--radius); border: 1px solid var(--line);
-    background: var(--panel2); color: var(--text); font-size: 14px; outline: none; font-family: inherit;
-  }
+  .field input, .field select, .field textarea { width: 100%; padding: 8px 10px; border-radius: var(--radius);
+    border: 1px solid var(--line); background: var(--panel2); color: var(--text); font-size: 14px; outline: none; font-family: inherit; }
   .field textarea { resize: vertical; min-height: 60px; }
-  .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(107, 79, 42, 0.18); }
-  
-  .section-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin: 24px 0 10px 0; border-bottom: 2px solid var(--panel2); padding-bottom: 4px; }
-  
-  .rel-row { display: flex; align-items: center; justify-content: space-between; background: var(--panel2); border: 1px solid var(--line); border-radius: var(--radius); padding: 8px 10px; margin-bottom: 8px; font-size: 13px; font-weight: 500; }
-  .rel-row .rel-name { cursor: pointer; border: none; background: none; padding: 0; font-size: 13px; font-weight: 500; color: var(--text); text-align: left;}
+  .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(107,79,42,0.18); }
+  .section-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--muted); margin: 24px 0 10px 0; border-bottom: 2px solid var(--panel2); padding-bottom: 4px; }
+  .rel-row { display: flex; align-items: center; justify-content: space-between; background: var(--panel2);
+    border: 1px solid var(--line); border-radius: var(--radius); padding: 8px 10px; margin-bottom: 8px; font-size: 13px; font-weight: 500; }
+  .rel-row .rel-name { cursor: pointer; border: none; background: none; padding: 0; font-size: 13px; font-weight: 500; color: var(--text); text-align: left; }
   .rel-row .rel-name:hover, .rel-row .rel-name:focus-visible { color: var(--accent); text-decoration: underline; }
   .rel-row button.remove-btn { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 16px; padding: 2px 6px; border-radius: 4px; }
   .rel-row button.remove-btn:hover { color: var(--danger); background: #f4dfdb; }
-  
   .add-inline { display: flex; gap: 8px; margin-top: 8px; }
   .add-inline input, .add-inline select { flex: 1; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--line); background: var(--panel); color: var(--text); font-size: 13px; }
   .add-inline button { flex-shrink: 0; }
-  
   .hint { font-size: 12px; color: var(--muted); line-height: 1.5; margin-top: 4px; }
   .flag { background: #f3ead5; border: 1px solid #b8741a; color: #6d4a19; font-size: 13px; padding: 10px; border-radius: var(--radius); margin-bottom: 16px; line-height: 1.4; font-weight: 500; }
-
-  /* ---------- Mini overlays ---------- */
-  #legend {
-    position: absolute; bottom: 16px; left: 16px; z-index: 15; background: rgba(255, 253, 247, 0.96);
+  #legend { position: absolute; bottom: 16px; left: 16px; z-index: 15; background: rgba(255,253,247,0.96);
     border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; font-size: 12px; font-weight: 500; color: var(--text);
-    display: flex; flex-direction: column; gap: 8px; backdrop-filter: blur(4px); box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-  }
+    display: flex; flex-direction: column; gap: 8px; backdrop-filter: blur(4px); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
   #legend .row { display: flex; align-items: center; gap: 8px; }
   #legend .swatch { width: 16px; height: 3px; display: inline-block; }
-  
-  #zoomIndicator { position: absolute; bottom: 16px; right: 16px; z-index: 15; background: rgba(255, 253, 247, 0.96); border: 1px solid var(--line); border-radius: var(--radius); padding: 8px 12px; font-size: 13px; font-weight: 600; color: var(--text); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-
-  #modalBg { position: fixed; inset: 0; background: rgba(47, 42, 36, 0.58); backdrop-filter: blur(2px); z-index: 50; display: none; align-items: center; justify-content: center; }
+  #zoomIndicator { position: absolute; bottom: 16px; right: 16px; z-index: 15; background: rgba(255,253,247,0.96);
+    border: 1px solid var(--line); border-radius: var(--radius); padding: 8px 12px; font-size: 13px; font-weight: 600; color: var(--text); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+  #modalBg { position: fixed; inset: 0; background: rgba(47,42,36,0.58); backdrop-filter: blur(2px); z-index: 50; display: none; align-items: center; justify-content: center; }
   #modalBg.open { display: flex; }
   #modalBox { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 24px; width: 90%; max-width: 440px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
   #modalBox h3 { margin-top: 0; font-size: 18px; margin-bottom: 16px; }
   #modalBox .field { margin-bottom: 16px; }
   #modalActions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px; }
-
   input[type=file] { display: none; }
-
-  @media (max-width: 720px){
-    #panel { width: 100%; right: -100%; border-left: none; }
-    #toolbar .title { display: none; }
-    #legend { display: none; }
-  }
+  @media (max-width: 720px) { #panel { width: 100%; right: -100%; border-left: none; } #toolbar .title { display: none; } #legend { display: none; } }
 </style>
 </head>
 <body>
@@ -200,18 +127,13 @@
       <input type="file" id="fileInput" accept="application/json" aria-hidden="true">
       <button class="btn small danger" id="btnResetData">Reset to Original</button>
       <span style="flex:1"></span>
-      <!-- Accessibility Fix: Added aria-live to announce tree changes -->
       <span class="hint" id="statsLabel" style="align-self:center;" aria-live="polite"></span>
       <span class="hint" id="syncStatus" style="align-self:center; font-weight:600;"></span>
     </div>
   </div>
-
   <div id="canvasWrap">
-    <svg id="tree" width="100%" height="100%">
-      <g id="viewport"></g>
-    </svg>
+    <svg id="tree" width="100%" height="100%"><g id="viewport"></g></svg>
   </div>
-
   <div id="legend" aria-hidden="true">
     <div class="row"><span class="swatch" style="background:var(--edge-marriage);"></span> Marriage / spouse</div>
     <div class="row"><span class="swatch" style="background:var(--edge-parent);"></span> Parent → child</div>
@@ -219,43 +141,22 @@
     <div class="row"><span style="width:12px;height:12px;background:var(--female-bg);border:2px solid var(--female-border);border-radius:3px;display:inline-block;"></span> Female</div>
   </div>
   <div id="zoomIndicator" aria-hidden="true">100%</div>
-
   <div id="panel" role="dialog" aria-labelledby="panelTitle">
     <button class="close-btn" id="panelClose" aria-label="Close side panel">✕</button>
     <div id="panelContent"></div>
   </div>
-
   <div id="modalBg" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div id="modalBox"></div>
   </div>
 </div>
-
-<!-- Supabase (free tier) — provides shared, real-time data sync across everyone who opens this page.
-     If you haven't set up Supabase yet, the app still works fine using only local browser storage;
-     see SUPABASE_URL / SUPABASE_ANON_KEY below and the setup instructions provided alongside this file. -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script id="seed-data" type="application/json">{"people":{"P1":{"id":"P1","name":"Govindrao Deshpande","gender":null,"birth":"","death":"","notes":""},"P2":{"id":"P2","name":"Narhar Deshpande","gender":null,"birth":"","death":"","notes":""},"P3":{"id":"P3","name":"Atmaram Deshpande","gender":null,"birth":"","death":"","notes":""},"P4":{"id":"P4","name":"Devidaspant Deshpande","gender":null,"birth":"","death":"","notes":""},"P5":{"id":"P5","name":"Vishnupant Deshpande","gender":null,"birth":"","death":"","notes":""},"P6":{"id":"P6","name":"Wamanrao Deshpande","gender":null,"birth":"","death":"","notes":""},"P7":{"id":"P7","name":"Baburao Deshpande","gender":null,"birth":"","death":"","notes":""},"P8":{"id":"P8","name":"Vimal Deshpande","gender":null,"birth":"","death":"","notes":""},"P9":{"id":"P9","name":"??","gender":null,"birth":"","death":"","notes":""},"P10":{"id":"P10","name":"Narayan Deshpande","gender":null,"birth":"","death":"","notes":""},"P11":{"id":"P11","name":"Appa Kaka","gender":null,"birth":"","death":"","notes":""},"P12":{"id":"P12","name":"Vasudeo Deshpande","gender":null,"birth":"","death":"","notes":""},"P13":{"id":"P13","name":"Janardhan Deshpande","gender":null,"birth":"","death":"","notes":""},"P14":{"id":"P14","name":"Bhalachandra Deshpande","gender":null,"birth":"","death":"","notes":""},"P15":{"id":"P15","name":"Sharadkumar D","gender":null,"birth":"","death":"","notes":""},"P16":{"id":"P16","name":"Shankarrao D","gender":null,"birth":"","death":"","notes":""},"P17":{"id":"P17","name":"Keshavrao Deshpande","gender":null,"birth":"","death":"","notes":""},"P18":{"id":"P18","name":"Arun D","gender":null,"birth":"","death":"","notes":""},"P19":{"id":"P19","name":"Suhasrao D.","gender":null,"birth":"","death":"","notes":""},"P20":{"id":"P20","name":"Jayant D","gender":null,"birth":"","death":"","notes":""},"P21":{"id":"P21","name":"Shreekrishna D","gender":null,"birth":"","death":"","notes":""},"P22":{"id":"P22","name":"Tai Attya D","gender":null,"birth":"","death":"","notes":""},"P23":{"id":"P23","name":"Suniti D","gender":null,"birth":"","death":"","notes":""},"P24":{"id":"P24","name":"Nirmala D.","gender":null,"birth":"","death":"","notes":""},"P25":{"id":"P25","name":"Usha D","gender":null,"birth":"","death":"","notes":""},"P27":{"id":"P27","name":"Shobha Deshpande","gender":"F","birth":"","death":"","notes":""},"P29":{"id":"P29","name":"Nalini Deshpande","gender":"F","birth":"","death":"","notes":""},"P31":{"id":"P31","name":"Shalini Deshpande","gender":"F","birth":"","death":"","notes":""},"P34":{"id":"P34","name":"Suresh D","gender":null,"birth":"","death":"","notes":""},"P35":{"id":"P35","name":"Vinay D","gender":null,"birth":"","death":"","notes":""},"P36":{"id":"P36","name":"Govind D","gender":null,"birth":"","death":"","notes":""},"P37":{"id":"P37","name":"?","gender":null,"birth":"","death":"","notes":""},"P38":{"id":"P38","name":"Shyam D","gender":null,"birth":"","death":"","notes":""},"P39":{"id":"P39","name":"Vidula D","gender":null,"birth":"","death":"","notes":""},"P40":{"id":"P40","name":"Kalu Tai Dikshit","gender":null,"birth":"","death":"","notes":""},"P41":{"id":"P41","name":"??","gender":null,"birth":"","death":"","notes":""},"P42":{"id":"P42","name":"Bharti D","gender":null,"birth":"","death":"","notes":""},"P43":{"id":"P43","name":"Sulabha","gender":null,"birth":"","death":"","notes":""},"P44":{"id":"P44","name":"Ashok","gender":null,"birth":"","death":"","notes":""},"P45":{"id":"P45","name":"Charudatta","gender":null,"birth":"","death":"","notes":""},"P46":{"id":"P46","name":"Dilip","gender":null,"birth":"","death":"","notes":""},"P47":{"id":"P47","name":"Madhuri","gender":null,"birth":"","death":"","notes":""},"P48":{"id":"P48","name":"Mangal","gender":null,"birth":"","death":"","notes":""},"P49":{"id":"P49","name":"Ulhas","gender":null,"birth":"","death":"","notes":""},"P50":{"id":"P50","name":"Anand","gender":null,"birth":"","death":"","notes":""},"P51":{"id":"P51","name":"Neeta","gender":null,"birth":"","death":"","notes":""},"P55":{"id":"P55","name":"Shailaja D","gender":"F","birth":"","death":"","notes":""},"P57":{"id":"P57","name":"Avantika Deshpande","gender":"F","birth":"","death":"","notes":""},"P60":{"id":"P60","name":"Saroj D.","gender":"F","birth":"","death":"","notes":""},"P62":{"id":"P62","name":"Sarita D","gender":"F","birth":"","death":"","notes":""},"P68":{"id":"P68","name":"Chandrashekhar D","gender":"M","birth":"","death":"","notes":""},"P69":{"id":"P69","name":"Anita D","gender":"F","birth":"","death":"","notes":""},"P70":{"id":"P70","name":"Rajendra D","gender":"M","birth":"","death":"","notes":""},"P71":{"id":"P71","name":"Jyoti D","gender":"F","birth":"","death":"","notes":""},"P72":{"id":"P72","name":"Suresh","gender":"M","birth":"","death":"","notes":""},"P73":{"id":"P73","name":"Alka","gender":"F","birth":"","death":"","notes":""},"P74":{"id":"P74","name":"Ashokrao","gender":"M","birth":"","death":"","notes":""},"P75":{"id":"P75","name":"Ranjana","gender":"F","birth":"","death":"","notes":""},"P76":{"id":"P76","name":"Nutan D","gender":null,"birth":"","death":"","notes":""},"P77":{"id":"P77","name":"Vijay D","gender":"M","birth":"","death":"","notes":""},"P78":{"id":"P78","name":"Jyoti D","gender":"F","birth":"","death":"","notes":""},"P79":{"id":"P79","name":"Sanjay D","gender":"M","birth":"","death":"","notes":""},"P80":{"id":"P80","name":"Bhagyashree D","gender":"F","birth":"","death":"","notes":""},"P81":{"id":"P81","name":"Ajay D","gender":"M","birth":"","death":"","notes":""},"P82":{"id":"P82","name":"Meena D","gender":"F","birth":"","death":"","notes":""},"P83":{"id":"P83","name":"Shashank D","gender":"M","birth":"","death":"","notes":""},"P84":{"id":"P84","name":"Joyti","gender":"F","birth":"","death":"","notes":""},"P85":{"id":"P85","name":"Sandhya D","gender":null,"birth":"","death":"","notes":""},"P86":{"id":"P86","name":"Vinay D","gender":"M","birth":"","death":"","notes":""},"P87":{"id":"P87","name":"Lata D","gender":"F","birth":"","death":"","notes":""},"P88":{"id":"P88","name":"Prakash D","gender":"M","birth":"","death":"","notes":""},"P89":{"id":"P89","name":"Prachi","gender":"F","birth":"","death":"","notes":""},"P90":{"id":"P90","name":"Archana D","gender":null,"birth":"","death":"","notes":""},"P91":{"id":"P91","name":"Nayana D","gender":null,"birth":"","death":"","notes":""},"P92":{"id":"P92","name":"Milind","gender":null,"birth":"","death":"","notes":""},"P93":{"id":"P93","name":"Sudhir D","gender":"M","birth":"","death":"","notes":""},"P94":{"id":"P94","name":"Asmita D","gender":"F","birth":"","death":"","notes":""},"P95":{"id":"P95","name":"Sandeep D","gender":"M","birth":"","death":"","notes":""},"P96":{"id":"P96","name":"Swati D","gender":"F","birth":"","death":"","notes":""},"P97":{"id":"P97","name":"Sachin D","gender":"M","birth":"","death":"","notes":""},"P98":{"id":"P98","name":"Suchita D","gender":"F","birth":"","death":"","notes":""},"P99":{"id":"P99","name":"Paresh D","gender":"M","birth":"","death":"","notes":""},"P100":{"id":"P100","name":"Preeti D","gender":"F","birth":"","death":"","notes":""},"P101":{"id":"P101","name":"Yugesh D","gender":"M","birth":"","death":"","notes":""},"P102":{"id":"P102","name":"Shruti D","gender":"F","birth":"","death":"","notes":""},"P103":{"id":"P103","name":"Swapnil D","gender":null,"birth":"","death":"","notes":""},"P104":{"id":"P104","name":"Sukhada D","gender":null,"birth":"","death":"","notes":""},"P105":{"id":"P105","name":"Ajeet","gender":null,"birth":"","death":"","notes":""},"P106":{"id":"P106","name":"Anil","gender":null,"birth":"","death":"","notes":""},"P107":{"id":"P107","name":"Sunil","gender":null,"birth":"","death":"","notes":""},"P108":{"id":"P108","name":"Shaila","gender":null,"birth":"","death":"","notes":""},"P109":{"id":"P109","name":"Shyam D","gender":null,"birth":"","death":"","notes":""},"P110":{"id":"P110","name":"Sadanand D","gender":null,"birth":"","death":"","notes":""},"P111":{"id":"P111","name":"Satish D","gender":null,"birth":"","death":"","notes":""},"P112":{"id":"P112","name":"Sanjeevani","gender":null,"birth":"","death":"","notes":""},"P113":{"id":"P113","name":"Sandhya","gender":null,"birth":"","death":"","notes":""},"P114":{"id":"P114","name":"Prashant","gender":null,"birth":"","death":"","notes":""},"P115":{"id":"P115","name":"Pravin","gender":null,"birth":"","death":"","notes":""},"P116":{"id":"P116","name":"Seema D","gender":null,"birth":"","death":"","notes":""},"P117":{"id":"P117","name":"Shyamala D","gender":null,"birth":"","death":"","notes":"UNCLEAR IN SOURCE: original chart drew a line from both Usha D and Seema D to this person. Kept as Seema D's daughter; please verify."},"P118":{"id":"P118","name":"Rushikesh","gender":null,"birth":"","death":"","notes":""},"P119":{"id":"P119","name":"Amol D","gender":"M","birth":"","death":"","notes":""},"P120":{"id":"P120","name":"Aarti D","gender":"F","birth":"","death":"","notes":""},"P121":{"id":"P121","name":"Girish","gender":null,"birth":"","death":"","notes":""},"P122":{"id":"P122","name":"??","gender":null,"birth":"","death":"","notes":""},"P123":{"id":"P123","name":"Mayur","gender":null,"birth":"","death":"","notes":""},"P124":{"id":"P124","name":"Snehal","gender":null,"birth":"","death":"","notes":""},"P125":{"id":"P125","name":"Shilpa","gender":null,"birth":"","death":"","notes":""},"P126":{"id":"P126","name":"??","gender":null,"birth":"","death":"","notes":""},"P127":{"id":"P127","name":"??","gender":null,"birth":"","death":"","notes":"UNCLEAR IN SOURCE: original chart drew a line from both Nutan D and an unnamed child of Nutan D to this person. Kept as the grandchild relationship; please verify."},"P128":{"id":"P128","name":"??","gender":null,"birth":"","death":"","notes":""},"P129":{"id":"P129","name":"Vishal","gender":"M","birth":"","death":"","notes":""},"P130":{"id":"P130","name":"Renuka","gender":"F","birth":"","death":"","notes":""},"P131":{"id":"P131","name":"Rushikesh","gender":"M","birth":"","death":"","notes":""},"P132":{"id":"P132","name":"Revati","gender":"F","birth":"","death":"","notes":""},"P133":{"id":"P133","name":"Rasika","gender":null,"birth":"","death":"","notes":""},"P134":{"id":"P134","name":"??","gender":null,"birth":"","death":"","notes":""},"P135":{"id":"P135","name":"Anushree","gender":null,"birth":"","death":"","notes":""},"P136":{"id":"P136","name":"??","gender":null,"birth":"","death":"","notes":""},"P137":{"id":"P137","name":"Vishal","gender":"M","birth":"","death":"","notes":""},"P138":{"id":"P138","name":"Renu","gender":"F","birth":"","death":"","notes":""},"P139":{"id":"P139","name":"Vaibhav","gender":"M","birth":"","death":"","notes":""},"P140":{"id":"P140","name":"Pranjali","gender":"F","birth":"","death":"","notes":""},"P141":{"id":"P141","name":"Gauri","gender":null,"birth":"","death":"","notes":""},"P142":{"id":"P142","name":"Rahul","gender":"M","birth":"","death":"","notes":""},"P143":{"id":"P143","name":"Pooja","gender":"F","birth":"","death":"","notes":""},"P144":{"id":"P144","name":"Shraddha","gender":null,"birth":"","death":"","notes":""},"P145":{"id":"P145","name":"Ankit","gender":"M","birth":"","death":"","notes":""},"P146":{"id":"P146","name":"Sharayu","gender":"F","birth":"","death":"","notes":""},"P147":{"id":"P147","name":"Atharva","gender":null,"birth":"","death":"","notes":""},"P148":{"id":"P148","name":"Anjali","gender":null,"birth":"","death":"","notes":""},"P149":{"id":"P149","name":"Piyu","gender":null,"birth":"","death":"","notes":""},"P150":{"id":"P150","name":"Abhishek","gender":"M","birth":"","death":"","notes":""},"P151":{"id":"P151","name":"Madhura","gender":"F","birth":"","death":"","notes":""},"P152":{"id":"P152","name":"Himanshu","gender":null,"birth":"","death":"","notes":""},"P153":{"id":"P153","name":"Nrupal","gender":null,"birth":"","death":"","notes":""},"P154":{"id":"P154","name":"Girija","gender":null,"birth":"","death":"","notes":""},"P155":{"id":"P155","name":"Vedang","gender":null,"birth":"","death":"","notes":""},"P156":{"id":"P156","name":"Rugved","gender":null,"birth":"","death":"","notes":""},"P157":{"id":"P157","name":"Spruha","gender":null,"birth":"","death":"","notes":""},"P158":{"id":"P158","name":"Shreya","gender":null,"birth":"","death":"","notes":""},"P159":{"id":"P159","name":"Rudra","gender":null,"birth":"","death":"","notes":""},"P160":{"id":"P160","name":"Priya","gender":null,"birth":"","death":"","notes":""},"P161":{"id":"P161","name":"Mugdha","gender":null,"birth":"","death":"","notes":""},"P162":{"id":"P162","name":"Sanchit","gender":null,"birth":"","death":"","notes":""},"P163":{"id":"P163","name":"Radha","gender":null,"birth":"","death":"","notes":""},"P164":{"id":"P164","name":"??","gender":null,"birth":"","death":"","notes":""},"P165":{"id":"P165","name":"Sharv","gender":null,"birth":"","death":"","notes":""}},"unions":{"U1":{"id":"U1","parents":["P5","P27"],"children":["P48","P49","P50","P51"]},"U2":{"id":"U2","parents":["P6","P29"],"children":["P43","P44","P45","P46","P47"]},"U3":{"id":"U3","parents":["P7","P31"],"children":["P35","P34","P36","P37","P38","P39","P40","P41","P42"]},"U4":{"id":"U4","parents":["P16","P55"],"children":["P77","P81","P79"]},"U5":{"id":"U5","parents":["P17","P57"],"children":["P68","P70","P72","P74","P76"]},"U6":{"id":"U6","parents":["P19","P60"],"children":["P93","P97","P95"]},"U7":{"id":"U7","parents":["P20","P62"],"children":["P99","P101"]},"U8":{"id":"U8","parents":["P68","P69"],"children":["P118","P119","P121"]},"U9":{"id":"U9","parents":["P70","P71"],"children":["P122"]},"U11":{"id":"U11","parents":["P74","P75"],"children":["P123","P125","P124"]},"U12":{"id":"U12","parents":["P77","P78"],"children":["P133","P134"]},"U13":{"id":"U13","parents":["P79","P80"],"children":["P135","P136"]},"U14":{"id":"U14","parents":["P81","P82"],"children":["P129","P131"]},"U15":{"id":"U15","parents":["P83","P84"],"children":["P144","P145"]},"U16":{"id":"U16","parents":["P86","P87"],"children":["P137"]},"U17":{"id":"U17","parents":["P88","P89"],"children":["P147"]},"U18":{"id":"U18","parents":["P93","P94"],"children":["P157"]},"U19":{"id":"U19","parents":["P95","P96"],"children":["P155","P156"]},"U20":{"id":"U20","parents":["P97","P98"],"children":["P158","P159"]},"U21":{"id":"U21","parents":["P99","P100"],"children":["P160","P161"]},"U22":{"id":"U22","parents":["P101","P102"],"children":["P162","P163"]},"U26":{"id":"U26","parents":["P137","P138"],"children":["P139"]},"U31_solo_P1":{"id":"U31_solo_P1","parents":["P1"],"children":["P3","P4","P2"]},"U32_solo_P2":{"id":"U32_solo_P2","parents":["P2"],"children":["P11","P10","P12","P13","P14"]},"U33_solo_P3":{"id":"U33_solo_P3","parents":["P3"],"children":["P7","P6","P8","P9","P5"]},"U34_solo_P4":{"id":"U34_solo_P4","parents":["P4"],"children":["P17","P16","P18","P19","P20","P21","P22","P23","P24","P25","P15"]},"U35_solo_P15":{"id":"U35_solo_P15","parents":["P15"],"children":["P85","P83","P88","P86"]},"U36_solo_P18":{"id":"U36_solo_P18","parents":["P18"],"children":["P90","P91","P92"]},"U37_solo_P21":{"id":"U37_solo_P21","parents":["P21"],"children":["P103","P104"]},"U38_solo_P22":{"id":"U38_solo_P22","parents":["P22"],"children":["P105","P106","P107","P108"]},"U39_solo_P23":{"id":"U39_solo_P23","parents":["P23"],"children":["P109","P110","P111","P112","P113"]},"U40_solo_P24":{"id":"U40_solo_P24","parents":["P24"],"children":["P114","P115"]},"U41_solo_P25":{"id":"U41_solo_P25","parents":["P25"],"children":["P116"]},"U42_solo_P76":{"id":"U42_solo_P76","parents":["P76"],"children":["P126"]},"U43_solo_P85":{"id":"U43_solo_P85","parents":["P85"],"children":["P141","P142"]},"U44_solo_P90":{"id":"U44_solo_P90","parents":["P90"],"children":["P150","P152"]},"U45_solo_P91":{"id":"U45_solo_P91","parents":["P91"],"children":["P148","P149"]},"U46_solo_P92":{"id":"U46_solo_P92","parents":["P92"],"children":["P153","P154"]},"U47_solo_P103":{"id":"U47_solo_P103","parents":["P103"],"children":["P164","P165"]},"U48_solo_P116":{"id":"U48_solo_P116","parents":["P116"],"children":["P117"]},"U49_solo_P126":{"id":"U49_solo_P126","parents":["P126"],"children":["P127"]},"U50_solo_P127":{"id":"U50_solo_P127","parents":["P127"],"children":["P128"]}}}
-</script>
+<script id="seed-data" type="application/json">{"people":{"P1":{"id":"P1","name":"Govindrao Deshpande","birth":"","death":"","notes":"","gender":null},"P2":{"id":"P2","city":"","name":"Narhar Deshpande","birth":"","death":"","notes":"","phone":"","gender":"M"},"P3":{"id":"P3","name":"Atmaram Deshpande","birth":"","death":"","notes":"","gender":null},"P4":{"id":"P4","city":"","name":"Devidaspant Deshpande","birth":"","death":"","notes":"","phone":"","gender":"M"},"P5":{"id":"P5","name":"Vishnupant Deshpande","birth":"","death":"","notes":"","gender":null},"P6":{"id":"P6","name":"Wamanrao Deshpande","birth":"","death":"","notes":"","gender":null},"P7":{"id":"P7","city":"","name":"Ramakrishna Deshpande","birth":"","death":"","notes":"","phone":"","gender":"M"},"P8":{"id":"P8","city":"","name":"Rangu Talukdar","birth":"","death":"","notes":"","phone":"","gender":"F"},"P9":{"id":"P9","name":"??","birth":"","death":"","notes":"","gender":null},"P10":{"id":"P10","city":"","name":"Vasudeorao Deshpande","birth":"","death":"","notes":"","phone":"","gender":"M"},"P11":{"id":"P11","city":"","name":"Madhavrao Deshpande","birth":"","death":"","notes":"","phone":"","gender":"M"},"P12":{"id":"P12","city":"","name":"Janardhan Deshpande","birth":"","death":"","notes":"","phone":"","gender":"M"},"P13":{"id":"P13","city":"","name":"Narayanrao Deshpande","birth":"","death":"","notes":"","phone":"","gender":"M"},"P14":{"id":"P14","city":"","name":"Bhalachandra Deshpande","birth":"","death":"","notes":"","phone":"","gender":"M"},"P15":{"id":"P15","city":"","name":"Sharadkumar D","birth":"","death":"","notes":"","phone":"","gender":"M"},"P16":{"id":"P16","name":"Shankarrao D","birth":"","death":"","notes":"","gender":null},"P17":{"id":"P17","name":"Keshavrao Deshpande","birth":"","death":"","notes":"","gender":null},"P18":{"id":"P18","name":"Arun D","birth":"","death":"","notes":"","gender":null},"P19":{"id":"P19","name":"Suhasrao D.","birth":"","death":"","notes":"","gender":"M"},"P20":{"id":"P20","name":"Jayant D","birth":"","death":"","notes":"","gender":"M"},"P21":{"id":"P21","city":"","name":"Shreekrishna D","birth":"","death":"","notes":"","phone":"","gender":"M"},"P22":{"id":"P22","city":"","name":"Tai Attya","birth":"","death":"","notes":"","phone":"","gender":"F"},"P23":{"id":"P23","city":"","name":"Suniti Deosarkar","birth":"","death":"","notes":"","phone":"","gender":"F"},"P24":{"id":"P24","city":"","name":"Nirmala Deshpande","birth":"","death":"","notes":"","phone":"","gender":"F"},"P25":{"id":"P25","city":"","name":"Usha Nafade","birth":"","death":"","notes":"","phone":"","gender":"F"},"P27":{"id":"P27","name":"Shobha Deshpande","birth":"","death":"","notes":"","gender":"F"},"P29":{"id":"P29","name":"Nalini Deshpande","birth":"","death":"","notes":"","gender":"F"},"P31":{"id":"P31","name":"Shalini Deshpande","birth":"","death":"","notes":"","gender":"F"},"P34":{"id":"P34","name":"Suresh D","birth":"","death":"","notes":"","gender":null},"P35":{"id":"P35","city":"","name":"Vinayak D","birth":"","death":"","notes":"","phone":"","gender":"M"},"P36":{"id":"P36","city":"","name":"Sudha Mundle","birth":"","death":"","notes":"","phone":"","gender":"F"},"P37":{"id":"P37","city":"","name":"Vidula Dixit","birth":"","death":"","notes":"","phone":"","gender":"F"},"P38":{"id":"P38","city":"","name":"Nandakishore Deshpande","birth":"","death":"","notes":"","phone":"","gender":"M"},"P39":{"id":"P39","city":"","name":"Govind Deshpande","birth":"","death":"","notes":"","phone":"","gender":"M"},"P40":{"id":"P40","city":"","name":"Shyam Deshpande","birth":"","death":"","notes":"","phone":"","gender":"M"},"P42":{"id":"P42","city":"","name":"Bharti D","birth":"","death":"","notes":"","phone":"","gender":"F"},"P43":{"id":"P43","city":"","name":"Sulabha","birth":"","death":"","notes":"","phone":"","gender":"F"},"P44":{"id":"P44","city":"","name":"Ashok","birth":"","death":"","notes":"","phone":"","gender":"M"},"P45":{"id":"P45","name":"Charudatta","birth":"","death":"","notes":"","gender":null},"P46":{"id":"P46","city":"","name":"Dilip","birth":"","death":"","notes":"","phone":"","gender":"M"},"P47":{"id":"P47","city":"","name":"Madhuri","birth":"","death":"","notes":"","phone":"","gender":"F"},"P48":{"id":"P48","city":"","name":"Mangal","birth":"","death":"","notes":"","phone":"","gender":"F"},"P49":{"id":"P49","city":"","name":"Ulhas","birth":"","death":"","notes":"","phone":"","gender":"M"},"P50":{"id":"P50","city":"","name":"Anand","birth":"","death":"","notes":"","phone":"","gender":"M"},"P51":{"id":"P51","city":"","name":"Neeta","birth":"","death":"","notes":"","phone":"","gender":"F"},"P55":{"id":"P55","name":"Shailaja D","birth":"","death":"","notes":"","gender":"F"},"P57":{"id":"P57","name":"Avantika Deshpande","birth":"","death":"","notes":"","gender":"F"},"P60":{"id":"P60","name":"Saroj D.","birth":"","death":"","notes":"","gender":"F"},"P62":{"id":"P62","name":"Sarita D","birth":"","death":"","notes":"","gender":"F"},"P68":{"id":"P68","name":"Chandrashekhar D","birth":"","death":"","notes":"","gender":"M"},"P69":{"id":"P69","name":"Anita D","birth":"","death":"","notes":"","gender":"F"},"P70":{"id":"P70","name":"Rajendra D","birth":"","death":"","notes":"","gender":"M"},"P71":{"id":"P71","name":"Jyoti D","birth":"","death":"","notes":"","gender":"F"},"P72":{"id":"P72","city":"","name":"Alka Borikar","birth":"","death":"","notes":"","phone":"","gender":"F"},"P74":{"id":"P74","name":"Ashokrao","birth":"","death":"","notes":"","gender":"M"},"P75":{"id":"P75","name":"Ranjana","birth":"","death":"","notes":"","gender":"F"},"P76":{"id":"P76","city":"","name":"Nutan Sapre","birth":"","death":"","notes":"","phone":"","gender":"F"},"P77":{"id":"P77","name":"Vijay D","birth":"","death":"","notes":"","gender":"M"},"P78":{"id":"P78","name":"Jyoti D","birth":"","death":"","notes":"","gender":"F"},"P79":{"id":"P79","name":"Sanjay D","birth":"","death":"","notes":"","gender":"M"},"P80":{"id":"P80","name":"Bhagyashree D","birth":"","death":"","notes":"","gender":"F"},"P81":{"id":"P81","name":"Ajay D","birth":"","death":"","notes":"","gender":"M"},"P82":{"id":"P82","name":"Meena D","birth":"","death":"","notes":"","gender":"F"},"P90":{"id":"P90","city":"","name":"Archana Wadekar","birth":"","death":"","notes":"","phone":"","gender":"F"},"P91":{"id":"P91","city":"","name":"Nayana Deshpande","birth":"","death":"","notes":"","phone":"","gender":"F"},"P92":{"id":"P92","city":"","name":"Milind","birth":"","death":"","notes":"","phone":"","gender":"M"},"P93":{"id":"P93","name":"Sudhir D","birth":"","death":"","notes":"","gender":"M"},"P94":{"id":"P94","name":"Asmita D","birth":"","death":"","notes":"","gender":"F"},"P95":{"id":"P95","name":"Sandeep D","birth":"","death":"","notes":"","gender":"M"},"P96":{"id":"P96","name":"Swati D","birth":"","death":"","notes":"","gender":"F"},"P97":{"id":"P97","name":"Sachin D","birth":"","death":"","notes":"","gender":"M"},"P98":{"id":"P98","name":"Suchita D","birth":"","death":"","notes":"","gender":"F"},"P99":{"id":"P99","name":"Paresh D","birth":"","death":"","notes":"","gender":"M"},"P100":{"id":"P100","name":"Preeti D","birth":"","death":"","notes":"","gender":"F"},"P101":{"id":"P101","name":"Yugesh D","birth":"","death":"","notes":"","gender":"M"},"P102":{"id":"P102","name":"Shruti D","birth":"","death":"","notes":"","gender":"F"},"P103":{"id":"P103","city":"","name":"Swapnil D","birth":"","death":"","notes":"","phone":"","gender":"M"},"P104":{"id":"P104","city":"","name":"Sukhada Bhosekar","birth":"","death":"","notes":"","phone":"","gender":"F"},"P105":{"id":"P105","city":"","name":"Ajeet","birth":"","death":"","notes":"","phone":"","gender":"M"},"P106":{"id":"P106","city":"","name":"Anil","birth":"","death":"","notes":"","phone":"","gender":"M"},"P107":{"id":"P107","city":"","name":"Sunil","birth":"","death":"","notes":"","phone":"","gender":"M"},"P108":{"id":"P108","city":"","name":"Shaila","birth":"","death":"","notes":"","phone":"","gender":"F"},"P109":{"id":"P109","city":"","name":"Shyam D","birth":"","death":"","notes":"","phone":"","gender":"M"},"P110":{"id":"P110","city":"","name":"Sadanand D","birth":"","death":"","notes":"","phone":"","gender":"M"},"P111":{"id":"P111","city":"","name":"Satish D","birth":"","death":"","notes":"","phone":"","gender":"M"},"P112":{"id":"P112","city":"","name":"Sanjeevani Lohakare","birth":"","death":"","notes":"","phone":"","gender":"F"},"P113":{"id":"P113","city":"","name":"Sandhya Dastane","birth":"","death":"","notes":"","phone":"","gender":"F"},"P114":{"id":"P114","name":"Prashant","birth":"","death":"","notes":"","gender":null},"P115":{"id":"P115","name":"Pravin","birth":"","death":"","notes":"","gender":null},"P116":{"id":"P116","city":"","name":"Seema","birth":"","death":"","notes":"","phone":"","gender":"F"},"P118":{"id":"P118","city":"","name":"Rushikesh","birth":"","death":"","notes":"","phone":"","gender":"M"},"P119":{"id":"P119","name":"Amol D","birth":"","death":"","notes":"","gender":"M"},"P121":{"id":"P121","city":"","name":"Girish","birth":"","death":"","notes":"","phone":"","gender":"M"},"P122":{"id":"P122","city":"","name":"Amruta","birth":"","death":"","notes":"","phone":"","gender":"F"},"P123":{"id":"P123","city":"","name":"Mayur","birth":"","death":"","notes":"","phone":"","gender":"M"},"P124":{"id":"P124","city":"","name":"Snehal","birth":"","death":"","notes":"","phone":"","gender":"F"},"P125":{"id":"P125","city":"","name":"Shilpa","birth":"","death":"","notes":"","phone":"","gender":"F"},"P126":{"id":"P126","name":"??","birth":"","death":"","notes":"","gender":null},"P129":{"id":"P129","name":"Renuka","birth":"","death":"","notes":"","gender":"F"},"P131":{"id":"P131","name":"Revati","birth":"","death":"","notes":"","gender":"F"},"P133":{"id":"P133","city":"","name":"Rasika","birth":"","death":"","notes":"","phone":"","gender":"F"},"P134":{"id":"P134","city":"","name":"??","birth":"","death":"","notes":"","phone":"","gender":"F"},"P135":{"id":"P135","city":"","name":"Anushree","birth":"","death":"","notes":"","phone":"","gender":"F"},"P136":{"id":"P136","city":"","name":"Gauri","birth":"","death":"","notes":"","phone":"","gender":"F"},"P148":{"id":"P148","city":"","name":"Anjali","birth":"","death":"","notes":"","phone":"","gender":"F"},"P149":{"id":"P149","city":"","name":"Mrunmayee","birth":"","death":"","notes":"","phone":"","gender":"F"},"P150":{"id":"P150","name":"Abhishek","birth":"","death":"","notes":"","gender":"M"},"P152":{"id":"P152","name":"Himanshu","birth":"","death":"","notes":"","gender":null},"P153":{"id":"P153","city":"","name":"Nrupal","birth":"","death":"","notes":"","phone":"","gender":"M"},"P154":{"id":"P154","city":"","name":"Girija","birth":"","death":"","notes":"","phone":"","gender":"F"},"P155":{"id":"P155","name":"Vedang","birth":"","death":"","notes":"","gender":"M"},"P156":{"id":"P156","name":"Rugved","birth":"","death":"","notes":"","gender":"M"},"P157":{"id":"P157","name":"Spruha","birth":"","death":"","notes":"","gender":"F"},"P158":{"id":"P158","name":"Shreya","birth":"","death":"","notes":"","gender":"F"},"P159":{"id":"P159","name":"Rudra","birth":"","death":"","notes":"","gender":"M"},"P160":{"id":"P160","name":"Priya","birth":"","death":"","notes":"","gender":"F"},"P161":{"id":"P161","name":"Mugdha","birth":"","death":"","notes":"","gender":"F"},"P162":{"id":"P162","name":"Sanchit","birth":"17.04.2008","death":"","notes":"","gender":"M"},"P163":{"id":"P163","name":"Radha","birth":"","death":"","notes":"","gender":"F"},"P164":{"id":"P164","city":"","name":"??","birth":"","death":"","notes":"","phone":"","gender":"F"},"P165":{"id":"P165","city":"","name":"Sharv","birth":"","death":"","notes":"","phone":"","gender":"M"},"P1000":{"id":"P1000","city":"","name":"Lata Deshmukh","birth":"","death":"","notes":"","phone":"","gender":"F"},"P1001":{"id":"P1001","city":"","name":"Vinayrao Deshmukh","birth":"","death":"","notes":"","phone":"","gender":"M"},"P1002":{"id":"P1002","city":"","name":"Gauri Bapat","birth":"","death":"","notes":"","phone":"","gender":"F"},"P1003":{"id":"P1003","name":"Madhura","birth":"","death":"","notes":"","gender":"F"},"P1004":{"id":"P1004","name":"Rahul","birth":"","death":"","notes":"","gender":"M"},"P1005":{"id":"P1005","name":"Pooja","birth":"","death":"","notes":"","gender":"F"},"P1006":{"id":"P1006","city":"","name":"Sandhya Sapre","birth":"","death":"","notes":"","phone":"","gender":"F"},"P1007":{"id":"P1007","name":"Shashank D","birth":"","death":"","notes":"","gender":"M"},"P1008":{"id":"P1008","name":"Prakash D","birth":"","death":"","notes":"","gender":null},"P1009":{"id":"P1009","city":"","name":"Vishal","birth":"","death":"","notes":"","phone":"","gender":"M"},"P1010":{"id":"P1010","name":"Jyoti","birth":"","death":"","notes":"","gender":"F"},"P1011":{"id":"P1011","name":"Shraddha","birth":"","death":"","notes":"","gender":"F"},"P1012":{"id":"P1012","name":"Sharayu","birth":"","death":"","notes":"","gender":"F"},"P1013":{"id":"P1013","name":"Prachi","birth":"","death":"","notes":"","gender":"F"},"P1014":{"id":"P1014","name":"Atharva","birth":"","death":"","notes":"","gender":"M"},"P1015":{"id":"P1015","city":"","name":"Vaibhav","birth":"","death":"","notes":"","phone":"","gender":"M"},"P1016":{"id":"P1016","city":"","name":"??","birth":"","death":"","notes":"","phone":"","gender":"F"},"P1017":{"id":"P1017","city":"","name":"Viraj","birth":"","death":"","notes":"","phone":"","gender":"M"},"P1018":{"id":"P1018","city":"","name":"Vishrut","birth":"","death":"","notes":"","phone":"","gender":"M"},"P1019":{"id":"P1019","name":"Shyamala","birth":"","death":"","notes":"","gender":"F"},"P1020":{"id":"P1020","name":"??","birth":"","death":"","notes":"","gender":null},"P1021":{"id":"P1021","name":"??","birth":"","death":"","notes":"","gender":null},"P1022":{"id":"P1022","city":"","name":"Renuka","birth":"","death":"","notes":"","phone":"","gender":"F"},"P1023":{"id":"P1023","city":"","name":"Pranjali","birth":"","death":"","notes":"","phone":"","gender":"F"},"P1024":{"id":"P1024","city":"","name":"Sushila Sonak","birth":"","death":"","notes":"","phone":"","gender":"F"},"P1025":{"id":"P1025","city":"","name":"Kunda Khokale","birth":"","death":"","notes":"","phone":"","gender":"F"},"P1026":{"id":"P1026","city":"","name":"??","birth":"","death":"","notes":"","phone":"","gender":"F"},"P1027":{"id":"P1027","city":"","name":"Jyoti Deshpande","birth":"","death":"","notes":"","phone":"","gender":"F"},"P1028":{"id":"P1028","city":"","name":"Vanmala Deshpande","birth":"","death":"","notes":"","phone":"","gender":"F"},"P1029":{"id":"P1029","city":"","name":"Neela Deshpande","birth":"","death":"","notes":"","phone":"","gender":"F"},"P1030":{"id":"P1030","city":"","name":"Chaaya","birth":"","death":"","notes":"","phone":"","gender":"F"},"P1031":{"id":"P1031","city":"","name":"Maaya","birth":"","death":"","notes":"","phone":"","gender":"F"},"P1032":{"id":"P1032","city":"","name":"Sandhya","birth":"","death":"","notes":"","phone":"","gender":"F"},"P1033":{"id":"P1033","city":"","name":"Sudha","birth":"","death":"","notes":"","phone":"","gender":"F"},"P1034":{"id":"P1034","city":"","name":"Sanju","birth":"","death":"","notes":"","phone":"","gender":"F"},"P1035":{"id":"P1035","city":"","name":"Sandeep","birth":"","death":"","notes":"","phone":"","gender":"M"},"P1036":{"id":"P1036","city":"","name":"??","birth":"","death":"","notes":"","phone":"","gender":"M"},"P1037":{"id":"P1037","city":"","name":"Mrudul","birth":"","death":"","notes":"","phone":"","gender":"F"},"P1038":{"id":"P1038","city":"","name":"Vijaya","birth":"","death":"","notes":"","phone":"","gender":"F"},"P1039":{"id":"P1039","city":"","name":"Yashvant","birth":"","death":"","notes":"","phone":"","gender":"M"},"P1040":{"id":"P1040","city":"","name":"??","birth":"","death":"","notes":"","phone":"","gender":"F"},"P1041":{"id":"P1041","city":"","name":"??","birth":"","death":"","notes":"","phone":"","gender":"F"},"P1042":{"id":"P1042","city":"","name":"??","birth":"","death":"","notes":"","phone":"","gender":"F"},"P1043":{"id":"P1043","city":"","name":"Meena","birth":"","death":"","notes":"","phone":"","gender":"F"},"P1044":{"id":"P1044","city":"","name":"Sameedha Guru","birth":"","death":"","notes":"","phone":"","gender":"F"},"P1045":{"id":"P1045","city":"","name":"Mrunmayee Deshpande","birth":"","death":"","notes":"","phone":"","gender":"F"},"P1046":{"id":"P1046","city":"","name":"Prabhakarrao Mundle","birth":"","death":"","notes":"","phone":"","gender":"M"},"P1047":{"id":"P1047","city":"","name":"Uttara","birth":"","death":"","notes":"","phone":"","gender":"F"},"P1048":{"id":"P1048","city":"","name":"Gayatri","birth":"","death":"","notes":"","phone":"","gender":"F"},"P1049":{"id":"P1049","city":"","name":"Jayashree","birth":"","death":"","notes":"","phone":"","gender":"F"},"P1050":{"id":"P1050","city":"","name":"Ketaki","birth":"","death":"","notes":"","phone":"","gender":"F"},"P1051":{"id":"P1051","city":"","name":"Gayatri","birth":"","death":"","notes":"","phone":"","gender":"F"},"P1052":{"id":"P1052","city":"","name":"Gauri","birth":"","death":"","notes":"","phone":"","gender":"F"},"P1053":{"id":"P1053","city":"","name":"Prachi","birth":"","death":"","notes":"","phone":"","gender":"F"},"P1054":{"id":"P1054","city":"","name":"Sankalp","birth":"","death":"","notes":"","phone":"","gender":"M"},"P1055":{"id":"P1055","city":"","name":"??","birth":"","death":"","notes":"","phone":"","gender":"F"},"P1056":{"id":"P1056","city":"","name":"Baburao Talukdar","birth":"","death":"","notes":"","phone":"","gender":"M"},"P1057":{"id":"P1057","city":"","name":"Janaki Deshpande","birth":"","death":"","notes":"","phone":"","gender":"F"},"P1058":{"id":"P1058","city":"","name":"Aarti","birth":"","death":"","notes":"","phone":"","gender":"F"},"P1059":{"id":"P1059","city":"","name":"??","birth":"","death":"","notes":"","phone":"","gender":"M"},"P1060":{"id":"P1060","city":"","name":"??","birth":"","death":"","notes":"","phone":"","gender":"M"},"P1061":{"id":"P1061","city":"","name":"Suresh Borikar","birth":"","death":"","notes":"","phone":"","gender":"M"},"P1062":{"id":"P1062","city":"","name":"Vivek","birth":"","death":"","notes":"","phone":"","gender":"M"},"P1063":{"id":"P1063","city":"","name":"Pramodrao Sapre","birth":"","death":"","notes":"","phone":"","gender":"M"},"P1064":{"id":"P1064","city":"","name":"Shantanu Deshpande","birth":"","death":"","notes":"","phone":"","gender":"M"},"P1065":{"id":"P1065","city":"","name":"Shripadrao Wadekar","birth":"","death":"","notes":"","phone":"","gender":"M"},"P1066":{"id":"P1066","city":"","name":"Anantrao Deshpande","birth":"","death":"","notes":"","phone":"","gender":"F"},"P1067":{"id":"P1067","city":"","name":"Vrushali","birth":"","death":"","notes":"","phone":"","gender":"F"},"P1068":{"id":"P1068","city":"","name":"Kavita Deshpande","birth":"","death":"","notes":"","phone":"","gender":"F"},"P1069":{"id":"P1069","city":"","name":"Shilpa","birth":"","death":"","notes":"","phone":"","gender":"F"},"P1070":{"id":"P1070","city":"","name":"Prafulla Bhosekar","birth":"","death":"","notes":"","phone":"","gender":"M"},"P1071":{"id":"P1071","city":"","name":"Nanasaheb Kulkarni","birth":"","death":"","notes":"","phone":"","gender":"M"},"P1072":{"id":"P1072","city":"","name":"Manoharpant Deosarkar","birth":"","death":"","notes":"","phone":"","gender":"M"},"P1073":{"id":"P1073","city":"","name":"Sushama Avtade","birth":"","death":"","notes":"","phone":"","gender":"F"},"P1074":{"id":"P1074","city":"","name":"Rajeshwarrao Lohakare","birth":"","death":"","notes":"","phone":"","gender":"M"},"P1075":{"id":"P1075","city":"","name":"Sudhirrao Dastane","birth":"","death":"","notes":"","phone":"","gender":"M"},"P1076":{"id":"P1076","city":"","name":"Anilrao Avtade","birth":"","death":"","notes":"","phone":"","gender":"M"},"P1077":{"id":"P1077","city":"","name":"Madhuri D","birth":"","death":"","notes":"","phone":"","gender":"F"},"P1078":{"id":"P1078","city":"","name":"Laxmanrao Deshpande","birth":"","death":"","notes":"","phone":"","gender":"M"},"P1079":{"id":"P1079","city":"","name":"Kamlakarrao Nafade","birth":"","death":"","notes":"","phone":"","gender":"M"},"P1080":{"id":"P1080","city":"","name":"Padmaja D","birth":"","death":"","notes":"","phone":"","gender":"F"},"P1081":{"id":"P1081","city":"","name":"Sureshrao Sapre","birth":"","death":"","notes":"","phone":"","gender":"M"},"P1082":{"id":"P1082","city":"","name":"Prasad Bapat","birth":"","death":"","notes":"","phone":"","gender":null}},"unions":{"U1":{"id":"U1","parents":["P5","P27"],"children":["P48","P49","P50","P51"]},"U2":{"id":"U2","parents":["P6","P29"],"children":["P43","P44","P45","P46","P47"]},"U3":{"id":"U3","parents":["P7","P31"],"children":["P35","P34","P36","P37","P38","P39","P40","P42"]},"U4":{"id":"U4","parents":["P16","P55"],"children":["P77","P81","P79"]},"U5":{"id":"U5","parents":["P17","P57"],"children":["P68","P70","P72","P74","P76"]},"U6":{"id":"U6","parents":["P19","P60"],"children":["P93","P97","P95"]},"U7":{"id":"U7","parents":["P20","P62"],"children":["P99","P101"]},"U8":{"id":"U8","parents":["P68","P69"],"children":["P118","P119","P121"]},"U9":{"id":"U9","parents":["P70","P71"],"children":["P122"]},"U11":{"id":"U11","parents":["P74","P75"],"children":["P123","P125","P124"]},"U12":{"id":"U12","parents":["P77","P78"],"children":["P133","P134"]},"U13":{"id":"U13","parents":["P79","P80"],"children":["P135","P136"]},"U14":{"id":"U14","parents":["P81","P82"],"children":["P129","P131"]},"U18":{"id":"U18","parents":["P93","P94"],"children":["P157"]},"U19":{"id":"U19","parents":["P95","P96"],"children":["P155","P156"]},"U20":{"id":"U20","parents":["P97","P98"],"children":["P158","P159"]},"U21":{"id":"U21","parents":["P99","P100"],"children":["P160","P161"]},"U22":{"id":"U22","parents":["P101","P102"],"children":["P162","P163"]},"U1000":{"id":"U1000","parents":["P1000","P1001"],"children":["P1009","P1015"]},"U1001":{"id":"U1001","parents":["P1001"],"children":[]},"U1002":{"id":"U1002","parents":["P150","P1003"],"children":[]},"U1003":{"id":"U1003","parents":["P1006"],"children":["P1002","P1004"]},"U1004":{"id":"U1004","parents":["P15"],"children":["P1006","P1007","P1008","P1000"]},"U1005":{"id":"U1005","parents":["P1007","P1010"],"children":["P1011","P1012"]},"U1006":{"id":"U1006","parents":["P1008","P1013"],"children":["P1014"]},"U1007":{"id":"U1007","parents":["P1000"],"children":[]},"U1008":{"id":"U1008","parents":["P35","P1016"],"children":["P1017","P1018"]},"U1009":{"id":"U1009","parents":["P34","P1043"],"children":["P1044","P1045"]},"U1010":{"id":"U1010","parents":["P1009","P1022"],"children":[]},"U1011":{"id":"U1011","parents":["P1004","P1005"],"children":[]},"U1012":{"id":"U1012","parents":["P1015","P1023"],"children":[]},"U1013":{"id":"U1013","parents":["P11"],"children":["P1027"]},"U1014":{"id":"U1014","parents":["P11","P1028"],"children":[]},"U1015":{"id":"U1015","parents":["P10","P1029"],"children":["P1030","P1031","P1032","P1033","P1034"]},"U1016":{"id":"U1016","parents":["P13"],"children":["P1035","P1036","P1037"]},"U1017":{"id":"U1017","parents":["P13","P1038"],"children":[]},"U1018":{"id":"U1018","parents":["P14"],"children":["P1039","P1040"]},"U1019":{"id":"U1019","parents":["P14","P1041"],"children":[]},"U1020":{"id":"U1020","parents":["P3","P1042"],"children":[]},"U1021":{"id":"U1021","parents":["P36","P1046"],"children":[]},"U1022":{"id":"U1022","parents":["P44","P1047"],"children":["P1050"]},"U1023":{"id":"U1023","parents":["P45","P1049"],"children":["P1051","P1052"]},"U1024":{"id":"U1024","parents":["P46","P1053"],"children":["P1054","P1055"]},"U1025":{"id":"U1025","parents":["P8","P1056"],"children":[]},"U1026":{"id":"U1026","parents":["P4","P1057"],"children":[]},"U1027":{"id":"U1027","parents":["P119","P1058"],"children":["P1059","P1060"]},"U1028":{"id":"U1028","parents":["P72","P1061"],"children":["P1062"]},"U1029":{"id":"U1029","parents":["P76","P1063"],"children":[]},"U1030":{"id":"U1030","parents":["P1027"],"children":["P1064"]},"U1031":{"id":"U1031","parents":["P90","P1065"],"children":[]},"U1032":{"id":"U1032","parents":["P91","P1066"],"children":[]},"U1033":{"id":"U1033","parents":["P92","P1067"],"children":[]},"U1034":{"id":"U1034","parents":["P21","P1068"],"children":[]},"U1035":{"id":"U1035","parents":["P103","P1069"],"children":[]},"U1036":{"id":"U1036","parents":["P104","P1070"],"children":[]},"U1037":{"id":"U1037","parents":["P22","P1071"],"children":[]},"U1038":{"id":"U1038","parents":["P23","P1072"],"children":["P1073"]},"U1039":{"id":"U1039","parents":["P112","P1074"],"children":[]},"U1040":{"id":"U1040","parents":["P113","P1075"],"children":[]},"U1041":{"id":"U1041","parents":["P1073","P1076"],"children":[]},"U1042":{"id":"U1042","parents":["P109","P1077"],"children":[]},"U1043":{"id":"U1043","parents":["P24","P1078"],"children":[]},"U1044":{"id":"U1044","parents":["P25","P1079"],"children":[]},"U1045":{"id":"U1045","parents":["P15","P1080"],"children":[]},"U1046":{"id":"U1046","parents":["P1006","P1081"],"children":[]},"U1047":{"id":"U1047","parents":["P1002","P1082"],"children":[]},"U31_solo_P1":{"id":"U31_solo_P1","parents":["P1"],"children":["P3","P4","P2"]},"U32_solo_P2":{"id":"U32_solo_P2","parents":["P2"],"children":["P11","P10","P12","P13","P14","P1024","P1025","P1026"]},"U33_solo_P3":{"id":"U33_solo_P3","parents":["P3"],"children":["P7","P6","P8","P9","P5"]},"U34_solo_P4":{"id":"U34_solo_P4","parents":["P4"],"children":["P17","P16","P18","P19","P20","P21","P22","P23","P24","P25","P15"]},"U36_solo_P18":{"id":"U36_solo_P18","parents":["P18"],"children":["P90","P91","P92"]},"U37_solo_P21":{"id":"U37_solo_P21","parents":["P21"],"children":["P103","P104"]},"U38_solo_P22":{"id":"U38_solo_P22","parents":["P22"],"children":["P105","P106","P107","P108"]},"U39_solo_P23":{"id":"U39_solo_P23","parents":["P23"],"children":["P109","P110","P111","P112","P113"]},"U40_solo_P24":{"id":"U40_solo_P24","parents":["P24"],"children":["P114","P115"]},"U41_solo_P25":{"id":"U41_solo_P25","parents":["P25"],"children":["P116","P1019"]},"U42_solo_P76":{"id":"U42_solo_P76","parents":["P76"],"children":["P126","P1020","P1021"]},"U44_solo_P90":{"id":"U44_solo_P90","parents":["P90"],"children":["P150","P152"]},"U45_solo_P91":{"id":"U45_solo_P91","parents":["P91"],"children":["P148","P149"]},"U46_solo_P92":{"id":"U46_solo_P92","parents":["P92"],"children":["P153","P154"]},"U47_solo_P103":{"id":"U47_solo_P103","parents":["P103"],"children":["P164","P165"]},"U49_solo_P126":{"id":"U49_solo_P126","parents":["P126"],"children":[]}}}</script>
 <script>
-// ============================================================================
-// Deshpande Family Tree
-// ============================================================================
 (function(){
   "use strict";
-
-  const LS_KEY = "familyTreeData_v1";
+  const LS_KEY = "familyTreeData_v2";
   const SEED = JSON.parse(document.getElementById('seed-data').textContent);
 
-  // ---------------------------------------------------------------------
-  // Shared cloud sync (Supabase, free tier)
-  // ---------------------------------------------------------------------
-  // 1. Create a free project at https://supabase.com
-  // 2. In the SQL editor, run the setup script provided alongside this file
-  //    (creates a "family_tree" table, opens it up, and enables realtime).
-  // 3. Go to Project Settings → API, copy the "Project URL" and "anon public" key,
-  //    and paste them below, replacing the placeholders.
-  // 4. That's it — every visitor who opens this page will read/write the same
-  //    shared row and see each other's edits live, with no server to run.
   const SUPABASE_URL = "https://glicvadupedqidryhvlh.supabase.co";
   const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdsaWN2YWR1cGVkcWlkcnlodmxoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkxMTUwMzUsImV4cCI6MjEwNDY5MTAzNX0.UOXuvm103hFUTkJLcjooL-ulh3W7eT2SENbkOyFhhGk";
   const SUPABASE_ENABLED = SUPABASE_URL !== "YOUR_SUPABASE_URL" && SUPABASE_ANON_KEY !== "YOUR_SUPABASE_ANON_KEY";
@@ -263,68 +164,91 @@
   const SB_ROW_ID = "main";
   let sb = null, applyingRemote = false, channel = null;
 
-  function setSyncStatus(text, color){
-    const el = document.getElementById('syncStatus');
-    if(el){ el.textContent = text; el.style.color = color || ''; }
-  }
+  function setSyncStatus(text, color){ const el = document.getElementById('syncStatus'); if(el){ el.textContent = text; el.style.color = color||''; } }
+  if(SUPABASE_ENABLED){ try{ sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); }catch(e){ console.error("Supabase init failed:", e); } }
 
-  if(SUPABASE_ENABLED){
-    try{
-      sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    }catch(e){
-      console.error("Supabase init failed, falling back to local-only storage:", e);
-    }
-  }
-
-  // ---------------------------------------------------------------------
-  // State
-  // ---------------------------------------------------------------------
-  let DATA = null;          
-  let nextPersonNum = 1000; 
+  let DATA = null;
+  let nextPersonNum = 1000;
   let nextUnionNum = 1000;
 
-  function loadLocal(){
-    const raw = localStorage.getItem(LS_KEY);
-    if(raw){
-      try{ return JSON.parse(raw); }catch(e){ console.warn("bad localStorage data, reseeding", e); }
-    }
-    return JSON.parse(JSON.stringify(SEED));
-  }
-  function saveLocal(){
-    localStorage.setItem(LS_KEY, JSON.stringify(DATA));
+  function loadLocal(){ const raw = localStorage.getItem(LS_KEY); if(raw){ try{ return JSON.parse(raw); }catch(e){} } return JSON.parse(JSON.stringify(SEED)); }
+  function saveLocal(){ localStorage.setItem(LS_KEY, JSON.stringify(DATA)); }
+
+  // -----------------------------------------------------------------------
+  // KEY FIX: Repair split unions on load.
+  // When a spouse was added after children existed, the code created a new
+  // 2-parent union but left the children in the old solo union, causing them
+  // to float disconnected in the layout. This migration merges them.
+  // -----------------------------------------------------------------------
+  function repairSplitUnions(){
+    let fixed = 0;
+    // Find all people who appear as the sole parent in a union that has children
+    // AND also appear as a parent in a separate 2-parent couple union.
+    const personToSoloUnions = {};
+    const personToCoupleUnions = {};
+    Object.values(DATA.unions).forEach(u => {
+      if(u.parents.length === 1){
+        const pid = u.parents[0];
+        if(!personToSoloUnions[pid]) personToSoloUnions[pid] = [];
+        personToSoloUnions[pid].push(u);
+      } else if(u.parents.length === 2){
+        u.parents.forEach(pid => {
+          if(!personToCoupleUnions[pid]) personToCoupleUnions[pid] = [];
+          personToCoupleUnions[pid].push(u);
+        });
+      }
+    });
+
+    Object.keys(personToSoloUnions).forEach(pid => {
+      const soloUnions = personToSoloUnions[pid].filter(u => u.children.length > 0);
+      const coupleUnions = personToCoupleUnions[pid] || [];
+      if(soloUnions.length === 0 || coupleUnions.length === 0) return;
+
+      // There is at least one solo union with children AND at least one couple union.
+      // Move children from solo unions into the couple union (prefer the one with children
+      // already, otherwise the first couple union).
+      const target = coupleUnions.find(u => u.children.length > 0) || coupleUnions[0];
+      soloUnions.forEach(solo => {
+        solo.children.forEach(cid => {
+          if(!target.children.includes(cid)) target.children.push(cid);
+        });
+        solo.children = [];
+        // If the solo union is now empty of children, delete it (it served as a
+        // placeholder before the spouse was added — the couple union supersedes it).
+        if(DATA.unions[solo.id] && DATA.unions[solo.id].children.length === 0){
+          delete DATA.unions[solo.id];
+        }
+        fixed++;
+      });
+    });
+
+    // Also remove truly orphaned unions (no parents at all — old bug).
+    Object.keys(DATA.unions).forEach(uid => {
+      if(DATA.unions[uid] && DATA.unions[uid].parents.length === 0){
+        delete DATA.unions[uid];
+        fixed++;
+      }
+    });
+    return fixed;
   }
 
-  // initData(): resolves once DATA is ready to render. If Supabase is configured,
-  // this also subscribes to live updates so remote edits from anyone appear here
-  // automatically, and pushes a first-time seed to the shared row if it's empty.
   function initData(){
-    if(!sb){
-      setSyncStatus("○ Local only (Supabase not configured)", "#a8291b");
-      DATA = loadLocal();
-      return Promise.resolve();
-    }
+    if(!sb){ setSyncStatus("○ Local only (Supabase not configured)", "#a8291b"); DATA = loadLocal(); return Promise.resolve(); }
     setSyncStatus("… Connecting", "#6f6659");
     return sb.from(SB_TABLE).select("data").eq("id", SB_ROW_ID).maybeSingle()
       .then(({data: row, error}) => {
         if(error) throw error;
-        if(row && row.data){
-          DATA = row.data;
-          return null;
-        } else {
-          DATA = loadLocal(); // use any local data as a starting point if present, else SEED
-          return sb.from(SB_TABLE).upsert({ id: SB_ROW_ID, data: DATA, updated_at: new Date().toISOString() });
-        }
+        if(row && row.data){ DATA = row.data; return null; }
+        else { DATA = loadLocal(); return sb.from(SB_TABLE).upsert({ id: SB_ROW_ID, data: DATA, updated_at: new Date().toISOString() }); }
       })
       .then(() => {
         saveLocal();
         setSyncStatus("● Synced live", "#2a7a3d");
-        // subscribe AFTER the initial load so we don't double-apply our own first write
         channel = sb.channel('family_tree_changes')
           .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: SB_TABLE, filter: `id=eq.${SB_ROW_ID}` }, (payload) => {
             const remote = payload.new && payload.new.data;
             if(!remote) return;
-            const remoteStr = JSON.stringify(remote);
-            if(remoteStr === JSON.stringify(DATA)) return; // no real change (e.g. echo of our own write)
+            if(JSON.stringify(remote) === JSON.stringify(DATA)) return;
             applyingRemote = true;
             DATA = remote;
             saveLocal();
@@ -335,135 +259,84 @@
           .subscribe();
       })
       .catch(err => {
-        console.error("Supabase load failed, falling back to local-only storage:", err);
+        console.error("Supabase load failed, falling back to local:", err);
         setSyncStatus("○ Sync unavailable — edits saved locally only", "#a8291b");
         DATA = loadLocal();
       });
   }
 
-  function saveData(){
-    saveLocal();
-    if(applyingRemote) return; // don't echo a remote update straight back up
-    if(sb){
-      sb.from(SB_TABLE).upsert({ id: SB_ROW_ID, data: DATA, updated_at: new Date().toISOString() })
-        .then(({error}) => {
-          if(error){
-            console.error("Supabase save failed:", error);
-            setSyncStatus("○ Sync error — last edit saved locally only", "#a8291b");
-          }
-        });
-    }
-  }
-  function resetToOriginal(){
-    if(!confirm("Reset the entire tree back to the originally-imported data? This affects EVERYONE using this shared tree, not just you. Continue?")) return;
-    DATA = JSON.parse(JSON.stringify(SEED));
-    nextPersonNum = 1000; nextUnionNum = 1000;
-    saveData();
-    fullRebuildAndRender(true);
-  }
+  function saveData(){ saveLocal(); if(applyingRemote) return; if(sb){ sb.from(SB_TABLE).upsert({ id: SB_ROW_ID, data: DATA, updated_at: new Date().toISOString() }).then(({error}) => { if(error){ console.error("Supabase save failed:", error); setSyncStatus("○ Sync error — last edit saved locally only", "#a8291b"); } }); } }
+  function resetToOriginal(){ if(!confirm("Reset the entire tree back to the originally-imported data? This affects EVERYONE using this shared tree. Continue?")) return; DATA = JSON.parse(JSON.stringify(SEED)); nextPersonNum = 1000; nextUnionNum = 1000; saveData(); fullRebuildAndRender(true); }
 
   function newPersonId(){ while(DATA.people["P"+nextPersonNum]) nextPersonNum++; return "P"+(nextPersonNum++); }
   function newUnionId(){ while(DATA.unions["U"+nextUnionNum]) nextUnionNum++; return "U"+(nextUnionNum++); }
 
-  // ---------------------------------------------------------------------
-  // Data helpers
-  // ---------------------------------------------------------------------
   function getPerson(id){ return DATA.people[id]; }
   function allPeople(){ return Object.values(DATA.people); }
   function allUnions(){ return Object.values(DATA.unions); }
+  function unionsWhereParent(pid){ return allUnions().filter(u => u.parents.includes(pid)); }
+  function unionWhereChild(pid){ return allUnions().find(u => u.children.includes(pid)) || null; }
+  function spousesOf(pid){ let out = []; unionsWhereParent(pid).forEach(u => u.parents.forEach(p => { if(p!==pid) out.push(p); })); return out; }
+  function childrenOf(pid){ let out = []; unionsWhereParent(pid).forEach(u => u.children.forEach(c => out.push(c))); return [...new Set(out)]; }
+  function parentsOf(pid){ const u = unionWhereChild(pid); return u ? u.parents.slice() : []; }
+  function siblingsOf(pid){ const u = unionWhereChild(pid); if(!u) return []; return u.children.filter(c=>c!==pid); }
 
-  function unionsWhereParent(pid){
-    return allUnions().filter(u => u.parents.includes(pid));
-  }
-  function unionWhereChild(pid){
-    return allUnions().find(u => u.children.includes(pid)) || null;
-  }
-  function spousesOf(pid){
-    let out = [];
-    unionsWhereParent(pid).forEach(u => u.parents.forEach(p => { if(p!==pid) out.push(p); }));
-    return out;
-  }
-  function childrenOf(pid){
-    let out = [];
-    unionsWhereParent(pid).forEach(u => u.children.forEach(c => out.push(c)));
-    return [...new Set(out)];
-  }
-  function parentsOf(pid){
-    const u = unionWhereChild(pid);
-    return u ? u.parents.slice() : [];
-  }
-  function siblingsOf(pid){
-    const u = unionWhereChild(pid);
-    if(!u) return [];
-    return u.children.filter(c => c!==pid);
-  }
-
+  // -----------------------------------------------------------------------
+  // KEY FIX: solveOrCreateSoloUnion — prefer a union that already has children.
+  // Previously it just found "any solo union" which could pick an empty one,
+  // leading to children being added to the wrong union.
+  // -----------------------------------------------------------------------
   function solveOrCreateSoloUnion(pid){
-    let u = allUnions().find(u => u.parents.length===1 && u.parents[0]===pid);
-    if(u) return u;
+    const all = allUnions().filter(u => u.parents.length === 1 && u.parents[0] === pid);
+    // Prefer a solo union that already has children (the "real" one)
+    const withChildren = all.find(u => u.children.length > 0);
+    if(withChildren) return withChildren;
+    // Fall back to any existing solo union
+    if(all.length > 0) return all[0];
+    // Create a fresh one
     const uid = newUnionId();
     DATA.unions[uid] = {id:uid, parents:[pid], children:[]};
     return DATA.unions[uid];
   }
 
   function isAncestor(candidateId, pid, guard){
-    guard = guard||0;
-    if(guard>60) return false;
-    const u = unionWhereChild(pid);
-    if(!u) return false;
-    for(const par of u.parents){
-      if(par===candidateId) return true;
-      if(isAncestor(candidateId, par, guard+1)) return true;
-    }
+    guard = guard||0; if(guard>60) return false;
+    const u = unionWhereChild(pid); if(!u) return false;
+    for(const par of u.parents){ if(par===candidateId) return true; if(isAncestor(candidateId, par, guard+1)) return true; }
     return false;
   }
 
-  // ---------------------------------------------------------------------
-  // Mutations
-  // ---------------------------------------------------------------------
-  function addPerson(fields){
-    const id = newPersonId();
-    DATA.people[id] = Object.assign({id, name:"New Person", gender:null, birth:"", death:"", city:"", phone:"", notes:""}, fields||{});
-    return id;
-  }
-  function updatePerson(id, fields){
-    Object.assign(DATA.people[id], fields);
-  }
+  function addPerson(fields){ const id = newPersonId(); DATA.people[id] = Object.assign({id, name:"New Person", gender:null, birth:"", death:"", city:"", phone:"", notes:""}, fields||{}); return id; }
+  function updatePerson(id, fields){ Object.assign(DATA.people[id], fields); }
   function deletePerson(id){
-    allUnions().forEach(u => {
-      const i = u.parents.indexOf(id);
-      if(i>=0) u.parents.splice(i,1);
-    });
-    allUnions().forEach(u => {
-      const i = u.children.indexOf(id);
-      if(i>=0) u.children.splice(i,1);
-    });
-    // A union with no parents left is meaningless (a "marriage" with nobody in it) —
-    // remove it regardless of whether it still lists children, otherwise those
-    // children become orphaned/dangling and render disconnected from the tree.
-    Object.keys(DATA.unions).forEach(uid => {
-      if(DATA.unions[uid].parents.length===0){
-        delete DATA.unions[uid];
-      }
-    });
+    allUnions().forEach(u => { const i = u.parents.indexOf(id); if(i>=0) u.parents.splice(i,1); });
+    allUnions().forEach(u => { const i = u.children.indexOf(id); if(i>=0) u.children.splice(i,1); });
+    Object.keys(DATA.unions).forEach(uid => { if(DATA.unions[uid].parents.length===0) delete DATA.unions[uid]; });
     delete DATA.people[id];
   }
 
+  // -----------------------------------------------------------------------
+  // KEY FIX: addSpouse — when a solo union already exists WITH children,
+  // upgrade it into the couple union instead of creating an empty new one.
+  // This is the core of the original bug: adding a spouse after children
+  // created a new blank union while children stayed in the old solo union.
+  // -----------------------------------------------------------------------
   function addSpouse(pid, spouseName, spouseGender){
     const sid = addPerson({name: spouseName||"New Spouse", gender: spouseGender||null});
-    const uid = newUnionId();
-    DATA.unions[uid] = {id:uid, parents:[pid, sid], children:[]};
+    // Check if a solo union with children already exists for this person
+    const existingSolo = allUnions().find(u => u.parents.length === 1 && u.parents[0] === pid && u.children.length > 0);
+    if(existingSolo){
+      // Upgrade the existing solo union to a couple union — children stay in place
+      existingSolo.parents.push(sid);
+    } else {
+      // No children yet: create a fresh couple union as before
+      const uid = newUnionId();
+      DATA.unions[uid] = {id:uid, parents:[pid, sid], children:[]};
+    }
     return sid;
   }
-  function removeSpouseUnion(uid){
-    const u = DATA.unions[uid];
-    if(!u) return;
-    if(u.children.length>0){
-      if(!confirm("This couple has "+u.children.length+" child(ren) recorded. Removing this marriage will leave those children without this parent pair. Continue?")) return false;
-    }
-    delete DATA.unions[uid];
-    return true;
-  }
+
+  function removeSpouseUnion(uid){ const u = DATA.unions[uid]; if(!u) return; if(u.children.length>0){ if(!confirm("This couple has "+u.children.length+" child(ren) recorded. Removing this marriage will leave those children without this parent pair. Continue?")) return false; } delete DATA.unions[uid]; return true; }
 
   function addChildTo(pidOrUid, childName, childGender){
     let uid;
@@ -473,46 +346,23 @@
     DATA.unions[uid].children.push(cid);
     return cid;
   }
-  function removeChildFromUnion(uid, cid){
-    const u = DATA.unions[uid];
-    if(!u) return;
-    const i = u.children.indexOf(cid);
-    if(i>=0) u.children.splice(i,1);
-  }
-  function changeChildParentUnion(cid, newUid){
-    allUnions().forEach(u => {
-      const i = u.children.indexOf(cid);
-      if(i>=0) u.children.splice(i,1);
-    });
-    if(newUid) DATA.unions[newUid].children.push(cid);
-  }
+  function removeChildFromUnion(uid, cid){ const u = DATA.unions[uid]; if(!u) return; const i = u.children.indexOf(cid); if(i>=0) u.children.splice(i,1); }
+  function changeChildParentUnion(cid, newUid){ allUnions().forEach(u => { const i = u.children.indexOf(cid); if(i>=0) u.children.splice(i,1); }); if(newUid) DATA.unions[newUid].children.push(cid); }
 
   function addParentTo(pid, parentName, parentGender){
     const existingUnion = unionWhereChild(pid);
     const newPid = addPerson({name: parentName||"New Parent", gender: parentGender||null});
-    if(existingUnion && existingUnion.parents.length===1){
-      existingUnion.parents.push(newPid);
-    } else if(existingUnion && existingUnion.parents.length>=2){
-      alert("This person already has two parents recorded. Remove one first if you want to replace them.");
-      delete DATA.people[newPid];
-      return null;
-    } else {
-      const uid = newUnionId();
-      DATA.unions[uid] = {id:uid, parents:[newPid], children:[pid]};
-    }
+    if(existingUnion && existingUnion.parents.length===1){ existingUnion.parents.push(newPid); }
+    else if(existingUnion && existingUnion.parents.length>=2){ alert("This person already has two parents recorded. Remove one first if you want to replace them."); delete DATA.people[newPid]; return null; }
+    else { const uid = newUnionId(); DATA.unions[uid] = {id:uid, parents:[newPid], children:[pid]}; }
     return newPid;
   }
 
   function attachExistingAsChild(parentPid, existingChildId){
-    if(existingChildId === parentPid){ alert("A person can't be their own child."); return false; }
-    if(isAncestor(existingChildId, parentPid)){
-      alert("That would create a cycle in the tree (an ancestor can't also be a descendant)."); return false;
-    }
+    if(existingChildId===parentPid){ alert("A person can't be their own child."); return false; }
+    if(isAncestor(existingChildId, parentPid)){ alert("That would create a cycle in the tree."); return false; }
     const existingParentUnion = unionWhereChild(existingChildId);
-    if(existingParentUnion){
-      const currentParentNames = existingParentUnion.parents.map(p=>getPerson(p).name).join(' & ');
-      if(!confirm(`${getPerson(existingChildId).name} already has a recorded parent (${currentParentNames||'unknown'}). Move them to be a child of ${getPerson(parentPid).name} instead?`)) return false;
-    }
+    if(existingParentUnion){ const currentParentNames = existingParentUnion.parents.map(p=>getPerson(p).name).join(' & '); if(!confirm(`${getPerson(existingChildId).name} already has a recorded parent (${currentParentNames||'unknown'}). Move them to be a child of ${getPerson(parentPid).name} instead?`)) return false; }
     const uid = solveOrCreateSoloUnion(parentPid).id;
     changeChildParentUnion(existingChildId, uid);
     return true;
@@ -520,752 +370,251 @@
 
   function attachExistingAsSpouse(pid, existingSpouseId){
     if(existingSpouseId===pid){ alert("A person can't be their own spouse."); return false; }
-    const already = spousesOf(pid).includes(existingSpouseId);
-    if(already){ alert("They are already recorded as spouses."); return false; }
-    const uid = newUnionId();
-    DATA.unions[uid] = {id:uid, parents:[pid, existingSpouseId], children:[]};
+    if(spousesOf(pid).includes(existingSpouseId)){ alert("They are already recorded as spouses."); return false; }
+    // Same fix as addSpouse: upgrade solo-with-children union if it exists
+    const existingSolo = allUnions().find(u => u.parents.length === 1 && u.parents[0] === pid && u.children.length > 0);
+    if(existingSolo){
+      existingSolo.parents.push(existingSpouseId);
+    } else {
+      const uid = newUnionId();
+      DATA.unions[uid] = {id:uid, parents:[pid, existingSpouseId], children:[]};
+    }
     return true;
   }
 
-  // ---------------------------------------------------------------------
-  // Layout: compute (x,y) for every person + union bus points
-  // ---------------------------------------------------------------------
+  // Layout constants
   const CARD_W = 140, CARD_H = 68, H_GAP = 275, GEN_H = 250;
-  const SPOUSE_FACTOR = 0.45; 
-
-  let layout = null; 
+  const SPOUSE_FACTOR = 0.45;
+  let layout = null;
 
   function computeLayout(){
-    function marriedToSomeoneWithParents(id){
-      return spousesOf(id).some(s => unionWhereChild(s)!==null);
-    }
-    let trueRoots = allPeople()
-      .filter(p => !unionWhereChild(p.id) && !marriedToSomeoneWithParents(p.id))
-      .map(p=>p.id);
-    if(trueRoots.length===0) trueRoots = allPeople().map(p=>p.id); 
-
+    function marriedToSomeoneWithParents(id){ return spousesOf(id).some(s => unionWhereChild(s)!==null); }
+    let trueRoots = allPeople().filter(p => !unionWhereChild(p.id) && !marriedToSomeoneWithParents(p.id)).map(p=>p.id);
+    if(trueRoots.length===0) trueRoots = allPeople().map(p=>p.id);
     const gen = {};
     const queue = [];
     trueRoots.forEach(r => { gen[r]=0; queue.push(r); });
     while(queue.length){
       const pid = queue.shift();
       unionsWhereParent(pid).forEach(u => {
-        u.parents.forEach(p => { if(!(p in gen)){ gen[p]=gen[pid]; queue.push(p);} });
-        u.children.forEach(c => { if(!(c in gen)){ gen[c]=gen[pid]+1; queue.push(c);} });
+        u.parents.forEach(p => { if(!(p in gen)){ gen[p]=gen[pid]; queue.push(p); } });
+        u.children.forEach(c => { if(!(c in gen)){ gen[c]=gen[pid]+1; queue.push(c); } });
       });
     }
     allPeople().forEach(p => { if(!(p.id in gen)) gen[p.id]=0; });
-
     const nodeX = {};
-    const busXOf = {};   
-    const expanded = new Set(); // tracks whether we've already walked a person's OWN unions
+    const busXOf = {};
+    const expanded = new Set();
     let cursor = 0;
 
     function layoutPerson(pid){
-      // IMPORTANT: do NOT bail out just because pid already has an x position.
-      // A person can get an x position two different ways: (a) by being explicitly
-      // laid out here as a child/root, or (b) passively, as a *spouse* positioned
-      // relative to their partner's union while THAT union was being expanded.
-      // Case (b) must still go on to expand this person's OWN marriage(s) below —
-      // otherwise, if someone is only ever discovered as "so-and-so's spouse" and
-      // never as a child/root in their own right, their own children never get
-      // laid out at all and end up rendered as a disconnected floating cluster.
       if(expanded.has(pid)) return nodeX[pid];
       expanded.add(pid);
-
       const myUnions = unionsWhereParent(pid);
-      if(myUnions.length===0){
-        if(!(pid in nodeX)){ nodeX[pid] = cursor; cursor += 1; }
-        return nodeX[pid];
-      }
-
+      if(myUnions.length===0){ if(!(pid in nodeX)){ nodeX[pid]=cursor; cursor+=1; } return nodeX[pid]; }
       let primaryCenter = null;
       myUnions.forEach((u, idx) => {
         let busX;
-        if(u.children.length>0){
-          const centers = u.children.map(c => layoutPerson(c));
-          busX = (Math.min(...centers) + Math.max(...centers)) / 2;
-        } else {
-          busX = cursor; cursor += 1;
-        }
+        if(u.children.length>0){ const centers = u.children.map(c => layoutPerson(c)); busX = (Math.min(...centers)+Math.max(...centers))/2; }
+        else { busX = cursor; cursor+=1; }
         busXOf[u.id] = busX;
         if(idx===0 && !(pid in nodeX)) primaryCenter = busX;
         const mid = (u.parents.length-1)/2;
-        u.parents.forEach((pp,i) => {
-          if(!(pp in nodeX)){ nodeX[pp] = busX + (i-mid)*SPOUSE_FACTOR; }
-        });
+        u.parents.forEach((pp,i) => { if(!(pp in nodeX)){ nodeX[pp] = busX + (i-mid)*SPOUSE_FACTOR; } });
       });
       if(!(pid in nodeX)) nodeX[pid] = primaryCenter;
       return nodeX[pid];
     }
 
     trueRoots.forEach(r => layoutPerson(r));
-    // Second pass: anyone who is a parent in some union but was only ever discovered
-    // passively (as somebody else's spouse) still needs their OWN union(s) expanded.
-    allPeople().forEach(p => {
-      if(!expanded.has(p.id) && unionsWhereParent(p.id).length > 0){
-        layoutPerson(p.id);
-      }
-    });
-    // Anyone left with no position at all (truly isolated, no parents/spouse/children)
-    // just gets placed in a row so they're still visible rather than missing entirely.
-    allPeople().forEach(p => {
-      if(!(p.id in nodeX)){ nodeX[p.id] = cursor; cursor += 1; }
-    });
+    allPeople().forEach(p => { if(!expanded.has(p.id) && unionsWhereParent(p.id).length>0) layoutPerson(p.id); });
+    allPeople().forEach(p => { if(!(p.id in nodeX)){ nodeX[p.id]=cursor; cursor+=1; } });
 
     const nodes = {};
-    let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity;
+    let minX=Infinity, maxX=-Infinity, minY=Infinity, maxY=-Infinity;
     Object.keys(nodeX).forEach(pid => {
-      const x = nodeX[pid] * (CARD_W+H_GAP);
-      const y = gen[pid] * GEN_H;
+      const x = nodeX[pid]*(CARD_W+H_GAP), y = gen[pid]*GEN_H;
       nodes[pid] = {x,y};
       minX=Math.min(minX,x); maxX=Math.max(maxX,x+CARD_W);
       minY=Math.min(minY,y); maxY=Math.max(maxY,y+CARD_H);
     });
-
     const unions = {};
     allUnions().forEach(u => {
       const parentNodes = u.parents.map(p=>nodes[p]).filter(Boolean);
       if(parentNodes.length===0) return;
-      const marriageY = parentNodes[0].y + CARD_H/2;
+      const marriageY = parentNodes[0].y+CARD_H/2;
       const xs = parentNodes.map(n=>n.x+CARD_W/2);
       const busXpx = (busXOf[u.id]!==undefined ? busXOf[u.id]*(CARD_W+H_GAP)+CARD_W/2 : (Math.min(...xs)+Math.max(...xs))/2);
       const childY = u.children.length ? Math.min(...u.children.map(c=>nodes[c]?nodes[c].y:Infinity)) : null;
-      unions[u.id] = { busX: busXpx, marriageY, dropY: marriageY + (childY!==null ? (childY-marriageY)/2 : 40), childY };
+      unions[u.id] = { busX: busXpx, marriageY, dropY: marriageY+(childY!==null ? (childY-marriageY)/2 : 40), childY };
     });
-
     return { nodes, unions, gen, minX, maxX, minY, maxY, trueRoots };
   }
 
-  // ---------------------------------------------------------------------
-  // Rendering
-  // ---------------------------------------------------------------------
   const svg = document.getElementById('tree');
   const viewport = document.getElementById('viewport');
   const canvasWrap = document.getElementById('canvasWrap');
   let view = {x:0, y:0, scale:0.75};
   let selectedId = null;
 
-  function applyView(){
-    viewport.setAttribute('transform', `translate(${view.x},${view.y}) scale(${view.scale})`);
-    document.getElementById('zoomIndicator').textContent = Math.round(view.scale*100)+"%";
-  }
-
+  function applyView(){ viewport.setAttribute('transform',`translate(${view.x},${view.y}) scale(${view.scale})`); document.getElementById('zoomIndicator').textContent = Math.round(view.scale*100)+"%"; }
   function ns(tag){ return document.createElementNS("http://www.w3.org/2000/svg", tag); }
 
   function render(){
     layout = computeLayout();
     viewport.innerHTML = "";
-
     allUnions().forEach(u => {
-      const ug = layout.unions[u.id];
-      if(!ug) return;
+      const ug = layout.unions[u.id]; if(!ug) return;
       if(u.parents.length>1){
-        const p0 = layout.nodes[u.parents[0]], p1 = layout.nodes[u.parents[1]];
-        if(p0 && p1){
-          const line = ns('line');
-          line.setAttribute('x1', p0.x+CARD_W); line.setAttribute('y1', p0.y+CARD_H/2);
-          line.setAttribute('x2', p1.x); line.setAttribute('y2', p1.y+CARD_H/2);
-          line.setAttribute('class','edge-marriage');
-          viewport.appendChild(line);
-        }
+        const p0=layout.nodes[u.parents[0]], p1=layout.nodes[u.parents[1]];
+        if(p0&&p1){ const line=ns('line'); line.setAttribute('x1',p0.x+CARD_W); line.setAttribute('y1',p0.y+CARD_H/2); line.setAttribute('x2',p1.x); line.setAttribute('y2',p1.y+CARD_H/2); line.setAttribute('class','edge-marriage'); viewport.appendChild(line); }
       }
       if(u.children.length){
-        const vert = ns('path');
-        vert.setAttribute('d', `M ${ug.busX} ${ug.marriageY} L ${ug.busX} ${ug.dropY}`);
-        vert.setAttribute('class','edge-parent');
-        viewport.appendChild(vert);
+        const vert=ns('path'); vert.setAttribute('d',`M ${ug.busX} ${ug.marriageY} L ${ug.busX} ${ug.dropY}`); vert.setAttribute('class','edge-parent'); viewport.appendChild(vert);
         u.children.forEach(cid => {
-          const cn = layout.nodes[cid];
-          if(!cn) return;
-          const cx = cn.x + CARD_W/2, cy = cn.y;
-          const path = ns('path');
-          path.setAttribute('d', `M ${ug.busX} ${ug.dropY} L ${cx} ${ug.dropY} L ${cx} ${cy}`);
-          path.setAttribute('class','edge-parent');
-          viewport.appendChild(path);
+          const cn=layout.nodes[cid]; if(!cn) return;
+          const cx=cn.x+CARD_W/2, cy=cn.y;
+          const path=ns('path'); path.setAttribute('d',`M ${ug.busX} ${ug.dropY} L ${cx} ${ug.dropY} L ${cx} ${cy}`); path.setAttribute('class','edge-parent'); viewport.appendChild(path);
         });
       }
     });
-
     allPeople().forEach(p => {
-      const pos = layout.nodes[p.id];
-      if(!pos) return;
-      
-      const g = ns('g');
-      g.setAttribute('class','node-group');
-      g.setAttribute('transform', `translate(${pos.x},${pos.y})`);
-      g.dataset.pid = p.id;
-
-      // A11Y Enhancements: Make SVG nodes focusable and readable by screen readers
-      g.setAttribute('tabindex', '0');
-      g.setAttribute('role', 'button');
-      g.setAttribute('aria-label', `${p.name}, ${p.gender === 'M' ? 'Male' : p.gender === 'F' ? 'Female' : 'Unknown gender'}. ${p.birth ? 'Born ' + p.birth : ''} ${p.death ? 'Died ' + p.death : ''}`);
-
-      const rect = ns('rect');
-      rect.setAttribute('width', CARD_W); rect.setAttribute('height', CARD_H);
-      rect.setAttribute('rx', 8);
-      let cls = 'card-rect';
-      if(p.gender==='M') cls += ' male'; else if(p.gender==='F') cls += ' female';
-      if(p.id===selectedId) cls += ' selected';
-      rect.setAttribute('class', cls);
+      const pos=layout.nodes[p.id]; if(!pos) return;
+      const g=ns('g'); g.setAttribute('class','node-group'); g.setAttribute('transform',`translate(${pos.x},${pos.y})`); g.dataset.pid=p.id;
+      g.setAttribute('tabindex','0'); g.setAttribute('role','button');
+      g.setAttribute('aria-label',`${p.name}, ${p.gender==='M'?'Male':p.gender==='F'?'Female':'Unknown gender'}. ${p.birth?'Born '+p.birth:''} ${p.death?'Died '+p.death:''}`);
+      const rect=ns('rect'); rect.setAttribute('width',CARD_W); rect.setAttribute('height',CARD_H); rect.setAttribute('rx',8);
+      let cls='card-rect'; if(p.gender==='M') cls+=' male'; else if(p.gender==='F') cls+=' female'; if(p.id===selectedId) cls+=' selected'; rect.setAttribute('class',cls);
       g.appendChild(rect);
-
-      const name = ns('text');
-      name.setAttribute('x', CARD_W/2);
-      name.setAttribute('text-anchor','middle');
-      name.setAttribute('class','card-name');
-      const lines = wrapName(p.name, 16);
-      const hasSub = !!(p.birth || p.death);
-      const lineHeight = 16;
-      const totalTextH = lines.length*lineHeight;
-      const startY = hasSub ? 24 - (lines.length-1)*lineHeight/2 : (CARD_H/2 - totalTextH/2 + 11);
-      lines.forEach((ln,i) => {
-        const tspan = ns('tspan');
-        tspan.setAttribute('x', CARD_W/2);
-        tspan.setAttribute('y', startY + i*lineHeight);
-        tspan.textContent = ln;
-        name.appendChild(tspan);
-      });
-      const titleEl = ns('title');
-      titleEl.textContent = p.name;
-      g.appendChild(titleEl);
-      g.appendChild(name);
-
-      if(hasSub){
-        const sub = ns('text');
-        sub.setAttribute('x', CARD_W/2); sub.setAttribute('y', CARD_H-12);
-        sub.setAttribute('text-anchor','middle');
-        sub.setAttribute('class','card-sub');
-        sub.textContent = (p.birth||'?') + ' – ' + (p.death||'');
-        g.appendChild(sub);
-      }
-      if(p.notes){
-        const flagDot = ns('circle');
-        flagDot.setAttribute('cx', CARD_W-10); flagDot.setAttribute('cy', 10); flagDot.setAttribute('r', 4);
-        flagDot.setAttribute('fill', '#b8741a');
-        g.appendChild(flagDot);
-      }
-
-      // Mouse & Keyboard Selection
-      g.addEventListener('click', (e)=>{ e.stopPropagation(); selectPerson(p.id); });
-      g.addEventListener('keydown', (e)=>{ 
-        if(e.key === 'Enter' || e.key === ' '){
-          e.preventDefault(); e.stopPropagation(); selectPerson(p.id); 
-        }
-      });
-      
+      const name=ns('text'); name.setAttribute('x',CARD_W/2); name.setAttribute('text-anchor','middle'); name.setAttribute('class','card-name');
+      const lines=wrapName(p.name,16); const hasSub=!!(p.birth||p.death); const lineHeight=16; const totalTextH=lines.length*lineHeight;
+      const startY=hasSub?24-(lines.length-1)*lineHeight/2:(CARD_H/2-totalTextH/2+11);
+      lines.forEach((ln,i) => { const tspan=ns('tspan'); tspan.setAttribute('x',CARD_W/2); tspan.setAttribute('y',startY+i*lineHeight); tspan.textContent=ln; name.appendChild(tspan); });
+      const titleEl=ns('title'); titleEl.textContent=p.name; g.appendChild(titleEl); g.appendChild(name);
+      if(hasSub){ const sub=ns('text'); sub.setAttribute('x',CARD_W/2); sub.setAttribute('y',CARD_H-12); sub.setAttribute('text-anchor','middle'); sub.setAttribute('class','card-sub'); sub.textContent=(p.birth||'?')+' – '+(p.death||''); g.appendChild(sub); }
+      if(p.notes){ const dot=ns('circle'); dot.setAttribute('cx',CARD_W-10); dot.setAttribute('cy',10); dot.setAttribute('r',4); dot.setAttribute('fill','#b8741a'); g.appendChild(dot); }
+      g.addEventListener('click',(e)=>{ e.stopPropagation(); selectPerson(p.id); });
+      g.addEventListener('keydown',(e)=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); e.stopPropagation(); selectPerson(p.id); } });
       viewport.appendChild(g);
     });
-
     applyView();
     updateStats();
   }
 
-  function truncate(s,n){ s=s||""; return s.length>n ? s.slice(0,n-1)+'…' : s; }
+  function wrapName(name, maxChars){ name=name||""; const words=name.split(/\s+/).filter(Boolean); const lines=[]; let cur=""; for(const w of words){ const trial=cur?cur+" "+w:w; if(trial.length<=maxChars){ cur=trial; } else { if(cur) lines.push(cur); cur=w; } } if(cur) lines.push(cur); if(lines.length>2){ const kept=lines.slice(0,2); kept[1]=kept[1].length>maxChars-1?kept[1].slice(0,maxChars-1)+'…':kept[1]+'…'; return kept; } return lines.map(l=>l.length>maxChars?l.slice(0,maxChars-1)+'…':l); }
+  function updateStats(){ document.getElementById('statsLabel').textContent = allPeople().length+" people · "+allUnions().length+" family units"; }
+  function fullRebuildAndRender(fitAfter){ saveData(); render(); if(fitAfter) fitToScreen(); }
 
-  function wrapName(name, maxChars){
-    name = name||"";
-    const words = name.split(/\s+/).filter(Boolean);
-    const lines = [];
-    let cur = "";
-    for(const w of words){
-      const trial = cur ? cur+" "+w : w;
-      if(trial.length <= maxChars){
-        cur = trial;
-      } else {
-        if(cur) lines.push(cur);
-        cur = w;
-      }
-      if(lines.length===1 && !cur){ /* noop */ }
-    }
-    if(cur) lines.push(cur);
-    if(lines.length>2){
-      const kept = lines.slice(0,2);
-      kept[1] = kept[1].length>maxChars-1 ? kept[1].slice(0,maxChars-1)+'…' : kept[1]+'…';
-      return kept;
-    }
-    return lines.map(l => l.length>maxChars ? l.slice(0,maxChars-1)+'…' : l);
-  }
-
-  function updateStats(){
-    document.getElementById('statsLabel').textContent =
-      allPeople().length + " people · " + allUnions().length + " family units";
-  }
-
-  function fullRebuildAndRender(fitAfter){
-    saveData();
-    render();
-    if(fitAfter) fitToScreen();
-  }
-
-  // Finds and removes "ghost" unions (marriages with zero parents left, from the
-  // older bug where deleting someone's last parent didn't clean up properly) so
-  // their children stop floating disconnected from the rest of the tree. Runs
-  // automatically once on load and saves the fix back to the shared data.
-  function repairOrphanedUnions(){
-    let fixed = 0;
-    Object.keys(DATA.unions).forEach(uid => {
-      if(DATA.unions[uid].parents.length === 0){
-        delete DATA.unions[uid];
-        fixed++;
-      }
-    });
-    return fixed;
-  }
-
-  // ---------------------------------------------------------------------
   // Pan & zoom
-  // ---------------------------------------------------------------------
   let isDragging=false, dragStart=null, viewStart=null;
-  canvasWrap.addEventListener('mousedown', (e)=>{
-    isDragging=true; dragStart={x:e.clientX,y:e.clientY}; viewStart={x:view.x,y:view.y};
-    canvasWrap.classList.add('grabbing');
-  });
-  window.addEventListener('mousemove', (e)=>{
-    if(!isDragging) return;
-    view.x = viewStart.x + (e.clientX-dragStart.x);
-    view.y = viewStart.y + (e.clientY-dragStart.y);
-    applyView();
-  });
-  window.addEventListener('mouseup', ()=>{ isDragging=false; canvasWrap.classList.remove('grabbing'); });
-
+  canvasWrap.addEventListener('mousedown',(e)=>{ isDragging=true; dragStart={x:e.clientX,y:e.clientY}; viewStart={x:view.x,y:view.y}; canvasWrap.classList.add('grabbing'); });
+  window.addEventListener('mousemove',(e)=>{ if(!isDragging) return; view.x=viewStart.x+(e.clientX-dragStart.x); view.y=viewStart.y+(e.clientY-dragStart.y); applyView(); });
+  window.addEventListener('mouseup',()=>{ isDragging=false; canvasWrap.classList.remove('grabbing'); });
   let touchState=null;
-  canvasWrap.addEventListener('touchstart', (e)=>{
-    if(e.touches.length===1){
-      touchState={mode:'pan', x:e.touches[0].clientX, y:e.touches[0].clientY, vx:view.x, vy:view.y};
-    } else if(e.touches.length===2){
-      const d = touchDist(e.touches);
-      touchState={mode:'zoom', d, scale:view.scale, midpoint: midpoint(e.touches)};
-    }
-  }, {passive:true});
-  canvasWrap.addEventListener('touchmove', (e)=>{
-    if(!touchState) return;
-    if(touchState.mode==='pan' && e.touches.length===1){
-      view.x = touchState.vx + (e.touches[0].clientX-touchState.x);
-      view.y = touchState.vy + (e.touches[0].clientY-touchState.y);
-      applyView();
-    } else if(touchState.mode==='zoom' && e.touches.length===2){
-      const d = touchDist(e.touches);
-      const factor = d/touchState.d;
-      zoomAt(touchState.midpoint.x, touchState.midpoint.y, touchState.scale*factor / view.scale);
-    }
-  }, {passive:true});
-  canvasWrap.addEventListener('touchend', ()=>{ touchState=null; });
-  function touchDist(t){ return Math.hypot(t[0].clientX-t[1].clientX, t[0].clientY-t[1].clientY); }
-  function midpoint(t){ return {x:(t[0].clientX+t[1].clientX)/2, y:(t[0].clientY+t[1].clientY)/2}; }
+  canvasWrap.addEventListener('touchstart',(e)=>{ if(e.touches.length===1){ touchState={mode:'pan',x:e.touches[0].clientX,y:e.touches[0].clientY,vx:view.x,vy:view.y}; } else if(e.touches.length===2){ const d=touchDist(e.touches); touchState={mode:'zoom',d,scale:view.scale,midpoint:midpoint(e.touches)}; } },{passive:true});
+  canvasWrap.addEventListener('touchmove',(e)=>{ if(!touchState) return; if(touchState.mode==='pan'&&e.touches.length===1){ view.x=touchState.vx+(e.touches[0].clientX-touchState.x); view.y=touchState.vy+(e.touches[0].clientY-touchState.y); applyView(); } else if(touchState.mode==='zoom'&&e.touches.length===2){ const d=touchDist(e.touches); const factor=d/touchState.d; zoomAt(touchState.midpoint.x,touchState.midpoint.y,touchState.scale*factor/view.scale); } },{passive:true});
+  canvasWrap.addEventListener('touchend',()=>{ touchState=null; });
+  function touchDist(t){ return Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY); }
+  function midpoint(t){ return {x:(t[0].clientX+t[1].clientX)/2,y:(t[0].clientY+t[1].clientY)/2}; }
+  canvasWrap.addEventListener('wheel',(e)=>{ e.preventDefault(); zoomAt(e.clientX,e.clientY,Math.pow(1.0015,-e.deltaY)); },{passive:false});
+  function zoomAt(clientX,clientY,factor){ const rect=canvasWrap.getBoundingClientRect(); const mx=clientX-rect.left,my=clientY-rect.top; const newScale=Math.min(3,Math.max(0.08,view.scale*factor)); const rf=newScale/view.scale; view.x=mx-(mx-view.x)*rf; view.y=my-(my-view.y)*rf; view.scale=newScale; applyView(); }
+  document.getElementById('btnZoomIn').onclick=()=>{ const r=canvasWrap.getBoundingClientRect(); zoomAt(r.left+r.width/2,r.top+r.height/2,1.25); };
+  document.getElementById('btnZoomOut').onclick=()=>{ const r=canvasWrap.getBoundingClientRect(); zoomAt(r.left+r.width/2,r.top+r.height/2,0.8); };
+  document.getElementById('btnReset').onclick=()=>{ view={x:60,y:80,scale:0.75}; applyView(); };
+  document.getElementById('btnFit').onclick=fitToScreen;
+  function fitToScreen(){ if(!layout) return; const rect=canvasWrap.getBoundingClientRect(); const w=layout.maxX-layout.minX,h=layout.maxY-layout.minY; if(w<=0||h<=0) return; const pad=80; const scale=Math.min((rect.width-pad)/w,(rect.height-pad)/h,1.4); view.scale=Math.max(0.05,scale); view.x=-layout.minX*view.scale+pad/2; view.y=-layout.minY*view.scale+pad/2; applyView(); }
+  function centerOnPerson(pid){ const pos=layout.nodes[pid]; if(!pos) return; const rect=canvasWrap.getBoundingClientRect(); view.scale=Math.max(view.scale,0.9); view.x=rect.width/2-(pos.x+CARD_W/2)*view.scale; view.y=rect.height/2-(pos.y+CARD_H/2)*view.scale; applyView(); }
 
-  canvasWrap.addEventListener('wheel', (e)=>{
-    e.preventDefault();
-    const factor = Math.pow(1.0015, -e.deltaY);
-    zoomAt(e.clientX, e.clientY, factor);
-  }, {passive:false});
-
-  function zoomAt(clientX, clientY, factor){
-    const rect = canvasWrap.getBoundingClientRect();
-    const mx = clientX-rect.left, my = clientY-rect.top;
-    const newScale = Math.min(3, Math.max(0.08, view.scale*factor));
-    const realFactor = newScale/view.scale;
-    view.x = mx - (mx-view.x)*realFactor;
-    view.y = my - (my-view.y)*realFactor;
-    view.scale = newScale;
-    applyView();
-  }
-
-  document.getElementById('btnZoomIn').onclick = ()=>{
-    const r = canvasWrap.getBoundingClientRect();
-    zoomAt(r.left+r.width/2, r.top+r.height/2, 1.25);
-  };
-  document.getElementById('btnZoomOut').onclick = ()=>{
-    const r = canvasWrap.getBoundingClientRect();
-    zoomAt(r.left+r.width/2, r.top+r.height/2, 0.8);
-  };
-  document.getElementById('btnReset').onclick = ()=>{ view={x:60,y:80,scale:0.75}; applyView(); };
-  document.getElementById('btnFit').onclick = fitToScreen;
-
-  function fitToScreen(){
-    if(!layout) return;
-    const rect = canvasWrap.getBoundingClientRect();
-    const w = layout.maxX-layout.minX, h = layout.maxY-layout.minY;
-    if(w<=0||h<=0) return;
-    const pad=80;
-    const scale = Math.min((rect.width-pad)/w, (rect.height-pad)/h, 1.4);
-    view.scale = Math.max(0.05, scale);
-    view.x = -layout.minX*view.scale + pad/2;
-    view.y = -layout.minY*view.scale + pad/2;
-    applyView();
-  }
-
-  function centerOnPerson(pid){
-    const pos = layout.nodes[pid];
-    if(!pos) return;
-    const rect = canvasWrap.getBoundingClientRect();
-    view.scale = Math.max(view.scale, 0.9);
-    view.x = rect.width/2 - (pos.x+CARD_W/2)*view.scale;
-    view.y = rect.height/2 - (pos.y+CARD_H/2)*view.scale;
-    applyView();
-  }
-
-  // ---------------------------------------------------------------------
   // Search
-  // ---------------------------------------------------------------------
-  const searchInput = document.getElementById('searchInput');
-  const searchResults = document.getElementById('searchResults');
-  
-  searchInput.addEventListener('input', ()=>{
-    const q = searchInput.value.trim().toLowerCase();
-    searchResults.innerHTML = "";
-    if(!q){ searchResults.style.display='none'; return; }
-    const matches = allPeople().filter(p => p.name.toLowerCase().includes(q)).slice(0,25);
-    if(matches.length===0){ searchResults.style.display='none'; return; }
-    matches.forEach(p => {
-      const btn = document.createElement('button');
-      btn.className = "search-item";
-      btn.textContent = p.name + (p.birth?(" ("+p.birth+(p.death?"–"+p.death:"")+")"):"");
-      btn.onclick = ()=>{
-        searchResults.style.display='none';
-        searchInput.value = p.name;
-        selectPerson(p.id);
-        centerOnPerson(p.id);
-      };
-      searchResults.appendChild(btn);
-    });
-    searchResults.style.display='block';
-  });
-  
-  document.addEventListener('click', (e)=>{
-    if(!searchResults.contains(e.target) && e.target!==searchInput) searchResults.style.display='none';
-  });
+  const searchInput=document.getElementById('searchInput');
+  const searchResults=document.getElementById('searchResults');
+  searchInput.addEventListener('input',()=>{ const q=searchInput.value.trim().toLowerCase(); searchResults.innerHTML=""; if(!q){ searchResults.style.display='none'; return; } const matches=allPeople().filter(p=>p.name.toLowerCase().includes(q)).slice(0,25); if(matches.length===0){ searchResults.style.display='none'; return; } matches.forEach(p=>{ const btn=document.createElement('button'); btn.className="search-item"; btn.textContent=p.name+(p.birth?(" ("+p.birth+(p.death?"–"+p.death:"")+")"):""); btn.onclick=()=>{ searchResults.style.display='none'; searchInput.value=p.name; selectPerson(p.id); centerOnPerson(p.id); }; searchResults.appendChild(btn); }); searchResults.style.display='block'; });
+  document.addEventListener('click',(e)=>{ if(!searchResults.contains(e.target)&&e.target!==searchInput) searchResults.style.display='none'; });
+  canvasWrap.addEventListener('click',()=>{ closePanel(); });
 
-  canvasWrap.addEventListener('click', ()=>{ closePanel(); });
-
-  // ---------------------------------------------------------------------
-  // Side panel: view / edit a person
-  // ---------------------------------------------------------------------
-  const panel = document.getElementById('panel');
-  const panelContent = document.getElementById('panelContent');
-  document.getElementById('panelClose').onclick = closePanel;
-
-  function closePanel(){
-    panel.classList.remove('open');
-    selectedId = null;
-    render();
-  }
-
-  function selectPerson(pid){
-    selectedId = pid;
-    render();
-    openPanelFor(pid);
-    
-    // Accessibility: Set focus to the close button when panel opens
-    setTimeout(() => { document.getElementById('panelClose').focus(); }, 300);
-  }
-
-  function personOptionsHtml(excludeIds){
-    excludeIds = excludeIds||[];
-    return allPeople()
-      .filter(p=>!excludeIds.includes(p.id))
-      .sort((a,b)=>a.name.localeCompare(b.name))
-      .map(p=>`<option value="${p.id}">${escapeHtml(p.name)}</option>`).join('');
-  }
-  function escapeHtml(s){ return (s||"").replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  // Side panel
+  const panel=document.getElementById('panel');
+  const panelContent=document.getElementById('panelContent');
+  document.getElementById('panelClose').onclick=closePanel;
+  function closePanel(){ panel.classList.remove('open'); selectedId=null; render(); }
+  function selectPerson(pid){ selectedId=pid; render(); openPanelFor(pid); setTimeout(()=>{ document.getElementById('panelClose').focus(); },300); }
+  function personOptionsHtml(excludeIds){ excludeIds=excludeIds||[]; return allPeople().filter(p=>!excludeIds.includes(p.id)).sort((a,b)=>a.name.localeCompare(b.name)).map(p=>`<option value="${p.id}">${escapeHtml(p.name)}</option>`).join(''); }
+  function escapeHtml(s){ return (s||"").replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
   function openPanelFor(pid){
-    const p = getPerson(pid);
-    if(!p){ closePanel(); return; }
-    const spouses = spousesOf(pid);
-    const kids = childrenOf(pid);
-    const parents = parentsOf(pid);
-    const sibs = siblingsOf(pid);
-
-    let html = `<h2 id="panelTitle">${escapeHtml(p.name)}</h2>`;
-    html += `<div class="hint" style="margin-bottom:14px;">ID: ${p.id}</div>`;
-
-    if(p.notes){
-      html += `<div class="flag">⚠ ${escapeHtml(p.notes)}</div>`;
-    }
-
-    html += `
-      <div class="field"><label for="f_name">Full name</label><input id="f_name" value="${escapeHtml(p.name)}"></div>
-      <div class="field"><label for="f_gender">Gender</label>
-        <select id="f_gender">
-          <option value="" ${!p.gender?'selected':''}>Unspecified</option>
-          <option value="M" ${p.gender==='M'?'selected':''}>Male</option>
-          <option value="F" ${p.gender==='F'?'selected':''}>Female</option>
-        </select>
-      </div>
+    const p=getPerson(pid); if(!p){ closePanel(); return; }
+    const spouses=spousesOf(pid), kids=childrenOf(pid), parents=parentsOf(pid), sibs=siblingsOf(pid);
+    let html=`<h2 id="panelTitle">${escapeHtml(p.name)}</h2><div class="hint" style="margin-bottom:14px;">ID: ${p.id}</div>`;
+    if(p.notes) html+=`<div class="flag">⚠ ${escapeHtml(p.notes)}</div>`;
+    html+=`<div class="field"><label for="f_name">Full name</label><input id="f_name" value="${escapeHtml(p.name)}"></div>
+      <div class="field"><label for="f_gender">Gender</label><select id="f_gender"><option value="" ${!p.gender?'selected':''}>Unspecified</option><option value="M" ${p.gender==='M'?'selected':''}>Male</option><option value="F" ${p.gender==='F'?'selected':''}>Female</option></select></div>
       <div class="field"><label for="f_birth">Birth year / date</label><input id="f_birth" value="${escapeHtml(p.birth)}" placeholder="e.g. 1942"></div>
       <div class="field"><label for="f_death">Death year / date</label><input id="f_death" value="${escapeHtml(p.death)}" placeholder="leave blank if living"></div>
       <div class="field"><label for="f_city">City / location</label><input id="f_city" value="${escapeHtml(p.city||'')}" placeholder="e.g. Pune, India"></div>
       <div class="field"><label for="f_phone">Phone number</label><input id="f_phone" type="tel" value="${escapeHtml(p.phone||'')}" placeholder="e.g. +91 98765 43210"></div>
       <div class="field"><label for="f_notes">Notes</label><textarea id="f_notes" placeholder="Any additional info…">${escapeHtml(p.notes)}</textarea></div>
-      <button class="btn primary" id="btnSavePerson" style="width:100%;">Save changes</button>
-    `;
-
-    html += `<div class="section-title">Parents</div>`;
-    if(parents.length===0){
-      html += `<div class="hint">No parents recorded.</div>`;
-    } else {
-      parents.forEach(pp=>{
-        html += `<div class="rel-row"><button class="rel-name" data-goto="${pp}">${escapeHtml(getPerson(pp).name)}</button>
-          <button class="remove-btn" aria-label="Remove parent link" data-remove-parent="${pp}" title="Remove this parent link">✕</button></div>`;
-      });
-    }
-    if(parents.length<2){
-      html += `<div class="add-inline">
-          <input aria-label="New parent name" id="newParentName" placeholder="New parent's name">
-          <select aria-label="New parent gender" id="newParentGender"><option value="">Gender?</option><option value="M">M</option><option value="F">F</option></select>
-          <button class="btn small" id="btnAddParent">+ Add</button>
-        </div>`;
-    }
-
-    html += `<div class="section-title">Spouse(s)</div>`;
-    if(spouses.length===0){
-      html += `<div class="hint">No spouse recorded.</div>`;
-    } else {
-      spouses.forEach(sp=>{
-        const u = allUnions().find(u=>u.parents.includes(pid)&&u.parents.includes(sp));
-        html += `<div class="rel-row"><button class="rel-name" data-goto="${sp}">${escapeHtml(getPerson(sp).name)}</button>
-          <button class="remove-btn" aria-label="Remove marriage" data-remove-union="${u.id}" title="Remove this marriage">✕</button></div>`;
-      });
-    }
-    html += `<div class="add-inline">
-        <input aria-label="New spouse name" id="newSpouseName" placeholder="New spouse's name">
-        <select aria-label="New spouse gender" id="newSpouseGender"><option value="">Gender?</option><option value="M">M</option><option value="F">F</option></select>
-        <button class="btn small" id="btnAddSpouse">+ Add</button>
-      </div>`;
-    html += `<div class="add-inline">
-        <select aria-label="Link existing spouse" id="linkSpouseSelect" style="flex:2;"><option value="">— or link an existing person —</option>${personOptionsHtml([pid])}</select>
-        <button class="btn small" id="btnLinkSpouse">Link</button>
-      </div>`;
-
-    html += `<div class="section-title">Children</div>`;
-    if(kids.length===0){
-      html += `<div class="hint">No children recorded.</div>`;
-    } else {
-      kids.forEach(k=>{
-        const u = unionWhereChild(k);
-        html += `<div class="rel-row"><button class="rel-name" data-goto="${k}">${escapeHtml(getPerson(k).name)}</button>
-          <button class="remove-btn" aria-label="Remove child link" data-remove-child="${u.id}|${k}" title="Remove this child link">✕</button></div>`;
-      });
-    }
-    html += `<div class="add-inline">
-        <input aria-label="New child name" id="newChildName" placeholder="New child's name">
-        <select aria-label="New child gender" id="newChildGender"><option value="">Gender?</option><option value="M">M</option><option value="F">F</option></select>
-        <button class="btn small" id="btnAddChild">+ Add</button>
-      </div>`;
-    html += `<div class="add-inline">
-        <select aria-label="Link existing child" id="linkChildSelect" style="flex:2;"><option value="">— link existing person as child —</option>${personOptionsHtml([pid])}</select>
-        <button class="btn small" id="btnLinkChild">Link</button>
-      </div>`;
-    if(spouses.length>0){
-      html += `<div class="hint">New children are added under this person's first recorded marriage.</div>`;
-    }
-
-    if(sibs.length){
-      html += `<div class="section-title">Siblings</div>`;
-      sibs.forEach(s=>{
-        html += `<div class="rel-row"><button class="rel-name" data-goto="${s}">${escapeHtml(getPerson(s).name)}</button></div>`;
-      });
-    }
-
-    html += `<div class="section-title">Reassign parents (advanced)</div>`;
-    html += `<div class="hint" style="margin-bottom:6px;">Move this person under a different existing parent/couple, if the tree needs correcting.</div>`;
-    html += `<select aria-label="Select new parent" id="reassignSelect" style="width:100%;margin-bottom:6px;">
-        <option value="">— choose a person to become the parent —</option>
-        ${personOptionsHtml([pid])}
-      </select>`;
-    html += `<button class="btn small" id="btnReassign" style="width:100%;">Move under selected person</button>`;
-
-    html += `<div class="section-title">Danger zone</div>`;
-    html += `<button class="btn danger" id="btnDeletePerson" style="width:100%;">Delete this person</button>`;
-
-    panelContent.innerHTML = html;
+      <button class="btn primary" id="btnSavePerson" style="width:100%;">Save changes</button>`;
+    html+=`<div class="section-title">Parents</div>`;
+    if(parents.length===0) html+=`<div class="hint">No parents recorded.</div>`;
+    else parents.forEach(pp=>{ html+=`<div class="rel-row"><button class="rel-name" data-goto="${pp}">${escapeHtml(getPerson(pp).name)}</button><button class="remove-btn" aria-label="Remove parent link" data-remove-parent="${pp}" title="Remove this parent link">✕</button></div>`; });
+    if(parents.length<2) html+=`<div class="add-inline"><input aria-label="New parent name" id="newParentName" placeholder="New parent's name"><select aria-label="New parent gender" id="newParentGender"><option value="">Gender?</option><option value="M">M</option><option value="F">F</option></select><button class="btn small" id="btnAddParent">+ Add</button></div>`;
+    html+=`<div class="section-title">Spouse(s)</div>`;
+    if(spouses.length===0) html+=`<div class="hint">No spouse recorded.</div>`;
+    else spouses.forEach(sp=>{ const u=allUnions().find(u=>u.parents.includes(pid)&&u.parents.includes(sp)); html+=`<div class="rel-row"><button class="rel-name" data-goto="${sp}">${escapeHtml(getPerson(sp).name)}</button><button class="remove-btn" aria-label="Remove marriage" data-remove-union="${u.id}" title="Remove this marriage">✕</button></div>`; });
+    html+=`<div class="add-inline"><input aria-label="New spouse name" id="newSpouseName" placeholder="New spouse's name"><select aria-label="New spouse gender" id="newSpouseGender"><option value="">Gender?</option><option value="M">M</option><option value="F">F</option></select><button class="btn small" id="btnAddSpouse">+ Add</button></div>`;
+    html+=`<div class="add-inline"><select aria-label="Link existing spouse" id="linkSpouseSelect" style="flex:2;"><option value="">— or link an existing person —</option>${personOptionsHtml([pid])}</select><button class="btn small" id="btnLinkSpouse">Link</button></div>`;
+    html+=`<div class="section-title">Children</div>`;
+    if(kids.length===0) html+=`<div class="hint">No children recorded.</div>`;
+    else kids.forEach(k=>{ const u=unionWhereChild(k); html+=`<div class="rel-row"><button class="rel-name" data-goto="${k}">${escapeHtml(getPerson(k).name)}</button><button class="remove-btn" aria-label="Remove child link" data-remove-child="${u.id}|${k}" title="Remove this child link">✕</button></div>`; });
+    html+=`<div class="add-inline"><input aria-label="New child name" id="newChildName" placeholder="New child's name"><select aria-label="New child gender" id="newChildGender"><option value="">Gender?</option><option value="M">M</option><option value="F">F</option></select><button class="btn small" id="btnAddChild">+ Add</button></div>`;
+    html+=`<div class="add-inline"><select aria-label="Link existing child" id="linkChildSelect" style="flex:2;"><option value="">— link existing person as child —</option>${personOptionsHtml([pid])}</select><button class="btn small" id="btnLinkChild">Link</button></div>`;
+    if(spouses.length>0) html+=`<div class="hint">New children are added under this person's first recorded marriage.</div>`;
+    if(sibs.length){ html+=`<div class="section-title">Siblings</div>`; sibs.forEach(s=>{ html+=`<div class="rel-row"><button class="rel-name" data-goto="${s}">${escapeHtml(getPerson(s).name)}</button></div>`; }); }
+    html+=`<div class="section-title">Reassign parents (advanced)</div><div class="hint" style="margin-bottom:6px;">Move this person under a different existing parent/couple.</div>
+      <select aria-label="Select new parent" id="reassignSelect" style="width:100%;margin-bottom:6px;"><option value="">— choose a person to become the parent —</option>${personOptionsHtml([pid])}</select>
+      <button class="btn small" id="btnReassign" style="width:100%;">Move under selected person</button>`;
+    html+=`<div class="section-title">Danger zone</div><button class="btn danger" id="btnDeletePerson" style="width:100%;">Delete this person</button>`;
+    panelContent.innerHTML=html;
     panel.classList.add('open');
 
-    document.getElementById('btnSavePerson').onclick = ()=>{
-      updatePerson(pid, {
-        name: document.getElementById('f_name').value.trim() || p.name,
-        gender: document.getElementById('f_gender').value || null,
-        birth: document.getElementById('f_birth').value.trim(),
-        death: document.getElementById('f_death').value.trim(),
-        city: document.getElementById('f_city').value.trim(),
-        phone: document.getElementById('f_phone').value.trim(),
-        notes: document.getElementById('f_notes').value.trim(),
-      });
-      fullRebuildAndRender(); openPanelFor(pid);
-    };
-    panelContent.querySelectorAll('[data-goto]').forEach(el=>{
-      el.onclick = ()=> selectPerson(el.dataset.goto);
-    });
-    panelContent.querySelectorAll('[data-remove-parent]').forEach(el=>{
-      el.onclick = ()=>{
-        const parentId = el.dataset.removeParent;
-        const u = unionWhereChild(pid);
-        if(u){
-          u.parents = u.parents.filter(x=>x!==parentId);
-          // Same fix as deletePerson(): a union with no parents left is meaningless,
-          // remove it even if it still has children so they don't dangle.
-          if(u.parents.length===0) delete DATA.unions[u.id];
-        }
-        fullRebuildAndRender(); openPanelFor(pid);
-      };
-    });
-    panelContent.querySelectorAll('[data-remove-union]').forEach(el=>{
-      el.onclick = ()=>{
-        const uid = el.dataset.removeUnion;
-        if(removeSpouseUnion(uid)!==false){ fullRebuildAndRender(); openPanelFor(pid); }
-      };
-    });
-    panelContent.querySelectorAll('[data-remove-child]').forEach(el=>{
-      el.onclick = ()=>{
-        const [uid,cid] = el.dataset.removeChild.split('|');
-        if(confirm("Remove this child link? The child will remain in the tree but detached from this parent.")){
-          removeChildFromUnion(uid,cid);
-          fullRebuildAndRender(); openPanelFor(pid);
-        }
-      };
-    });
-    const btnAddParent = document.getElementById('btnAddParent');
-    if(btnAddParent) btnAddParent.onclick = ()=>{
-      const name = document.getElementById('newParentName').value.trim();
-      if(!name){ alert("Enter a name for the new parent."); return; }
-      const gender = document.getElementById('newParentGender').value;
-      addParentTo(pid, name, gender);
-      fullRebuildAndRender(); openPanelFor(pid);
-    };
-    document.getElementById('btnAddSpouse').onclick = ()=>{
-      const name = document.getElementById('newSpouseName').value.trim();
-      if(!name){ alert("Enter a name for the new spouse."); return; }
-      const gender = document.getElementById('newSpouseGender').value;
-      addSpouse(pid, name, gender);
-      fullRebuildAndRender(); openPanelFor(pid);
-    };
-    document.getElementById('btnAddChild').onclick = ()=>{
-      const name = document.getElementById('newChildName').value.trim();
-      if(!name){ alert("Enter a name for the new child."); return; }
-      const gender = document.getElementById('newChildGender').value;
-      const targetUnion = unionsWhereParent(pid)[0];
-      addChildTo(targetUnion?targetUnion.id:pid, name, gender);
-      fullRebuildAndRender(); openPanelFor(pid);
-    };
-    document.getElementById('btnLinkChild').onclick = ()=>{
-      const otherId = document.getElementById('linkChildSelect').value;
-      if(!otherId){ alert("Choose an existing person first."); return; }
-      if(attachExistingAsChild(pid, otherId)){ fullRebuildAndRender(); openPanelFor(pid); }
-    };
-    document.getElementById('btnLinkSpouse').onclick = ()=>{
-      const otherId = document.getElementById('linkSpouseSelect').value;
-      if(!otherId){ alert("Choose an existing person first."); return; }
-      if(attachExistingAsSpouse(pid, otherId)){ fullRebuildAndRender(); openPanelFor(pid); }
-    };
-    document.getElementById('btnReassign').onclick = ()=>{
-      const newParentId = document.getElementById('reassignSelect').value;
-      if(!newParentId){ alert("Choose a person first."); return; }
-      if(newParentId===pid || isAncestor(pid, newParentId)){
-        alert("That would create a cycle in the tree (a person can't be their own ancestor)."); return;
-      }
-      const u = solveOrCreateSoloUnion(newParentId);
-      changeChildParentUnion(pid, u.id);
-      fullRebuildAndRender(); openPanelFor(pid);
-    };
-    document.getElementById('btnDeletePerson').onclick = ()=>{
-      if(confirm(`Delete ${p.name}? This removes them from the tree entirely (their children, if any, will remain but lose this parent link).`)){
-        deletePerson(pid);
-        closePanel();
-        fullRebuildAndRender();
-      }
-    };
+    document.getElementById('btnSavePerson').onclick=()=>{ updatePerson(pid,{name:document.getElementById('f_name').value.trim()||p.name,gender:document.getElementById('f_gender').value||null,birth:document.getElementById('f_birth').value.trim(),death:document.getElementById('f_death').value.trim(),city:document.getElementById('f_city').value.trim(),phone:document.getElementById('f_phone').value.trim(),notes:document.getElementById('f_notes').value.trim()}); fullRebuildAndRender(); openPanelFor(pid); };
+    panelContent.querySelectorAll('[data-goto]').forEach(el=>{ el.onclick=()=>selectPerson(el.dataset.goto); });
+    panelContent.querySelectorAll('[data-remove-parent]').forEach(el=>{ el.onclick=()=>{ const parentId=el.dataset.removeParent; const u=unionWhereChild(pid); if(u){ u.parents=u.parents.filter(x=>x!==parentId); if(u.parents.length===0) delete DATA.unions[u.id]; } fullRebuildAndRender(); openPanelFor(pid); }; });
+    panelContent.querySelectorAll('[data-remove-union]').forEach(el=>{ el.onclick=()=>{ const uid=el.dataset.removeUnion; if(removeSpouseUnion(uid)!==false){ fullRebuildAndRender(); openPanelFor(pid); } }; });
+    panelContent.querySelectorAll('[data-remove-child]').forEach(el=>{ el.onclick=()=>{ const [uid,cid]=el.dataset.removeChild.split('|'); if(confirm("Remove this child link? The child will remain in the tree but detached from this parent.")){ removeChildFromUnion(uid,cid); fullRebuildAndRender(); openPanelFor(pid); } }; });
+    const btnAddParent=document.getElementById('btnAddParent');
+    if(btnAddParent) btnAddParent.onclick=()=>{ const name=document.getElementById('newParentName').value.trim(); if(!name){ alert("Enter a name for the new parent."); return; } const gender=document.getElementById('newParentGender').value; addParentTo(pid,name,gender); fullRebuildAndRender(); openPanelFor(pid); };
+    document.getElementById('btnAddSpouse').onclick=()=>{ const name=document.getElementById('newSpouseName').value.trim(); if(!name){ alert("Enter a name for the new spouse."); return; } const gender=document.getElementById('newSpouseGender').value; addSpouse(pid,name,gender); fullRebuildAndRender(); openPanelFor(pid); };
+    document.getElementById('btnAddChild').onclick=()=>{ const name=document.getElementById('newChildName').value.trim(); if(!name){ alert("Enter a name for the new child."); return; } const gender=document.getElementById('newChildGender').value; const targetUnion=unionsWhereParent(pid)[0]; addChildTo(targetUnion?targetUnion.id:pid,name,gender); fullRebuildAndRender(); openPanelFor(pid); };
+    document.getElementById('btnLinkChild').onclick=()=>{ const otherId=document.getElementById('linkChildSelect').value; if(!otherId){ alert("Choose an existing person first."); return; } if(attachExistingAsChild(pid,otherId)){ fullRebuildAndRender(); openPanelFor(pid); } };
+    document.getElementById('btnLinkSpouse').onclick=()=>{ const otherId=document.getElementById('linkSpouseSelect').value; if(!otherId){ alert("Choose an existing person first."); return; } if(attachExistingAsSpouse(pid,otherId)){ fullRebuildAndRender(); openPanelFor(pid); } };
+    document.getElementById('btnReassign').onclick=()=>{ const newParentId=document.getElementById('reassignSelect').value; if(!newParentId){ alert("Choose a person first."); return; } if(newParentId===pid||isAncestor(pid,newParentId)){ alert("That would create a cycle in the tree."); return; } const u=solveOrCreateSoloUnion(newParentId); changeChildParentUnion(pid,u.id); fullRebuildAndRender(); openPanelFor(pid); };
+    document.getElementById('btnDeletePerson').onclick=()=>{ if(confirm(`Delete ${p.name}? This removes them from the tree entirely.`)){ deletePerson(pid); closePanel(); fullRebuildAndRender(); } };
   }
 
-  // ---------------------------------------------------------------------
-  // Add-person (floating / modal), Export, Import
-  // ---------------------------------------------------------------------
-  const modalBg = document.getElementById('modalBg');
-  const modalBox = document.getElementById('modalBox');
-  
-  function openModal(html){ 
-    modalBox.innerHTML = html; 
-    modalBg.classList.add('open'); 
-    setTimeout(() => {
-        const input = document.getElementById('m_name');
-        if (input) input.focus();
-    }, 100);
-  }
+  // Modal, export, import
+  const modalBg=document.getElementById('modalBg');
+  const modalBox=document.getElementById('modalBox');
+  function openModal(html){ modalBox.innerHTML=html; modalBg.classList.add('open'); setTimeout(()=>{ const i=document.getElementById('m_name'); if(i) i.focus(); },100); }
   function closeModal(){ modalBg.classList.remove('open'); }
-  modalBg.addEventListener('click', (e)=>{ if(e.target===modalBg) closeModal(); });
+  modalBg.addEventListener('click',(e)=>{ if(e.target===modalBg) closeModal(); });
+  document.getElementById('btnAddPerson').onclick=()=>{ openModal(`<h3 id="modalTitle">Add a new person</h3><div class="field"><label for="m_name">Full name</label><input id="m_name" placeholder="e.g. Ramesh Deshpande"></div><div class="field"><label for="m_gender">Gender</label><select id="m_gender"><option value="">Unspecified</option><option value="M">Male</option><option value="F">Female</option></select></div><div class="hint">This person will be added unconnected. Open them afterward to link them in the tree.</div><div id="modalActions"><button class="btn" onclick="window.__ft_closeModal()">Cancel</button><button class="btn primary" id="m_create">Create</button></div>`); document.getElementById('m_create').onclick=()=>{ const name=document.getElementById('m_name').value.trim(); if(!name){ alert("Enter a name."); return; } const gender=document.getElementById('m_gender').value; const id=addPerson({name,gender:gender||null}); closeModal(); fullRebuildAndRender(); selectPerson(id); centerOnPerson(id); }; };
+  window.__ft_closeModal=closeModal;
+  document.getElementById('btnExport').onclick=()=>{ const blob=new Blob([JSON.stringify(DATA,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='family-tree-export.json'; document.body.appendChild(a); a.click(); a.remove(); };
+  document.getElementById('btnImport').onclick=()=>document.getElementById('fileInput').click();
+  document.getElementById('fileInput').addEventListener('change',(e)=>{ const file=e.target.files[0]; if(!file) return; const reader=new FileReader(); reader.onload=()=>{ try{ const parsed=JSON.parse(reader.result); if(!parsed.people||!parsed.unions) throw new Error("Missing people/unions keys"); if(!confirm("Import this file? It will replace the entire current tree.")) return; DATA=parsed; saveData(); fullRebuildAndRender(true); }catch(err){ alert("Could not import file: "+err.message); } }; reader.readAsText(file); e.target.value=""; });
+  document.getElementById('btnResetData').onclick=resetToOriginal;
 
-  document.getElementById('btnAddPerson').onclick = ()=>{
-    openModal(`
-      <h3 id="modalTitle">Add a new person</h3>
-      <div class="field"><label for="m_name">Full name</label><input id="m_name" placeholder="e.g. Ramesh Deshpande"></div>
-      <div class="field"><label for="m_gender">Gender</label>
-        <select id="m_gender"><option value="">Unspecified</option><option value="M">Male</option><option value="F">Female</option></select>
-      </div>
-      <div class="hint">This person will be added unconnected. Open them afterward (search by name) to link them as a spouse, child, or parent of someone in the tree.</div>
-      <div id="modalActions">
-        <button class="btn" onclick="window.__ft_closeModal()">Cancel</button>
-        <button class="btn primary" id="m_create">Create</button>
-      </div>
-    `);
-    document.getElementById('m_create').onclick = ()=>{
-      const name = document.getElementById('m_name').value.trim();
-      if(!name){ alert("Enter a name."); return; }
-      const gender = document.getElementById('m_gender').value;
-      const id = addPerson({name, gender: gender||null});
-      closeModal();
-      fullRebuildAndRender();
-      selectPerson(id);
-      centerOnPerson(id);
-    };
-  };
-  window.__ft_closeModal = closeModal;
-
-  document.getElementById('btnExport').onclick = ()=>{
-    const blob = new Blob([JSON.stringify(DATA, null, 2)], {type:'application/json'});
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'family-tree-export.json';
-    document.body.appendChild(a); a.click(); a.remove();
-  };
-  
-  document.getElementById('btnImport').onclick = ()=> document.getElementById('fileInput').click();
-  document.getElementById('fileInput').addEventListener('change', (e)=>{
-    const file = e.target.files[0];
-    if(!file) return;
-    const reader = new FileReader();
-    reader.onload = ()=>{
-      try{
-        const parsed = JSON.parse(reader.result);
-        if(!parsed.people || !parsed.unions) throw new Error("Missing people/unions keys");
-        if(!confirm("Import this file? It will replace the entire current tree.")) return;
-        DATA = parsed;
-        saveData();
-        fullRebuildAndRender(true);
-      }catch(err){
-        alert("Could not import file: "+err.message);
-      }
-    };
-    reader.readAsText(file);
-    e.target.value = "";
-  });
-  
-  document.getElementById('btnResetData').onclick = resetToOriginal;
-
-  // ---------------------------------------------------------------------
   // Init
-  // ---------------------------------------------------------------------
   initData().then(() => {
-    const fixed = repairOrphanedUnions();
+    const fixed = repairSplitUnions();
     if(fixed > 0){
-      console.warn(`Repaired ${fixed} orphaned family record(s) left over from a past bug.`);
-      saveData(); // push the cleaned-up data back to Supabase so everyone gets the fix
+      console.log(`Fixed ${fixed} split/orphaned union(s) — spouse-before-children layout bug repaired.`);
+      saveData();
     }
     render();
-    // Open every page in the same viewport state as clicking Reset.
     document.getElementById('btnReset').click();
   });
-  window.addEventListener('resize', ()=>{ /* keep current view; user can hit Fit */ });
-
 })();
 </script>
 </body>
