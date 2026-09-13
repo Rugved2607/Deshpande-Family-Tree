@@ -558,17 +558,24 @@
 
     const nodeX = {};
     const busXOf = {};   
-    const visited = new Set();
+    const expanded = new Set(); // tracks whether we've already walked a person's OWN unions
     let cursor = 0;
 
     function layoutPerson(pid){
-      if(pid in nodeX) return nodeX[pid];
-      if(visited.has(pid)) return nodeX[pid] || 0; 
-      visited.add(pid);
+      // IMPORTANT: do NOT bail out just because pid already has an x position.
+      // A person can get an x position two different ways: (a) by being explicitly
+      // laid out here as a child/root, or (b) passively, as a *spouse* positioned
+      // relative to their partner's union while THAT union was being expanded.
+      // Case (b) must still go on to expand this person's OWN marriage(s) below —
+      // otherwise, if someone is only ever discovered as "so-and-so's spouse" and
+      // never as a child/root in their own right, their own children never get
+      // laid out at all and end up rendered as a disconnected floating cluster.
+      if(expanded.has(pid)) return nodeX[pid];
+      expanded.add(pid);
 
       const myUnions = unionsWhereParent(pid);
       if(myUnions.length===0){
-        nodeX[pid] = cursor; cursor += 1;
+        if(!(pid in nodeX)){ nodeX[pid] = cursor; cursor += 1; }
         return nodeX[pid];
       }
 
@@ -582,7 +589,7 @@
           busX = cursor; cursor += 1;
         }
         busXOf[u.id] = busX;
-        if(idx===0) primaryCenter = busX;
+        if(idx===0 && !(pid in nodeX)) primaryCenter = busX;
         const mid = (u.parents.length-1)/2;
         u.parents.forEach((pp,i) => {
           if(!(pp in nodeX)){ nodeX[pp] = busX + (i-mid)*SPOUSE_FACTOR; }
@@ -593,6 +600,15 @@
     }
 
     trueRoots.forEach(r => layoutPerson(r));
+    // Second pass: anyone who is a parent in some union but was only ever discovered
+    // passively (as somebody else's spouse) still needs their OWN union(s) expanded.
+    allPeople().forEach(p => {
+      if(!expanded.has(p.id) && unionsWhereParent(p.id).length > 0){
+        layoutPerson(p.id);
+      }
+    });
+    // Anyone left with no position at all (truly isolated, no parents/spouse/children)
+    // just gets placed in a row so they're still visible rather than missing entirely.
     allPeople().forEach(p => {
       if(!(p.id in nodeX)){ nodeX[p.id] = cursor; cursor += 1; }
     });
